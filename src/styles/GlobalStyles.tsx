@@ -58,32 +58,6 @@ picture {
   max-width: 100%;
   display: block;
 }
-h1 {
-  font-size: 50px;
-  font-weight: bold;
-}
-h2 {
-  font-size: 44px;
-  font-weight: bold;
-}
-h3 {
-  font-size: 40px;
-  font-weight: bold;
-}
-h4 {
-  font-size: 32px;
-  font-weight: bold;
-}
-h5 {
-  font-size: 24px;
-  font-weight: bold;
-}
-h6 {
-  font-size: 20px;
-  font-weight: 400;
-  color: #8C959F;
-  line-height: 30px;
-}
 `;
 
 const GlobalStyles = (): JSX.Element => (

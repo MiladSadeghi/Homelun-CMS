@@ -1,22 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-type TUserInterface = {
+type TUser = {
   isAuthenticated: boolean;
   accessToken: string | null;
+  name: string | null;
+  role: "super_admin" | "admin" | "agent" | null;
 };
 
-const initialState: TUserInterface = {
+const initialState: TUser = {
   isAuthenticated: false,
   accessToken: null,
+  name: null,
+  role: null,
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    userLoggedIn: (state, action) => {
-      state.isAuthenticated = action.payload.isAuthenticated;
-      state.accessToken = action.payload.accessToken;
+    userLoggedIn: (state, { payload }: { payload: TUser }) => {
+      state.isAuthenticated = payload.isAuthenticated;
+      state.accessToken = payload.accessToken;
+      state.name = payload.name;
+      state.role = payload.role;
     },
   },
 });

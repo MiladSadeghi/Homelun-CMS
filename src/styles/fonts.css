@@ -2,4 +2,5 @@
   font-family: "Mulish";
   src: url("./Mulish.ttf") format("truetype");
   font-style: normal;
+  font-display: fallback;
 }

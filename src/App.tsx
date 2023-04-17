@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import { store } from "./feature/store";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import Routes from "./routes";
 import { ToastContainer } from "react-toastify";
 

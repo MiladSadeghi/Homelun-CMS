@@ -35,6 +35,8 @@ function Login() {
         userLoggedIn({
           accessToken: data.accessToken,
           isAuthenticated: true,
+          name: data.name,
+          role: data.role,
         })
       );
       reset();

@@ -8,6 +8,7 @@ import Login from "../components/Login";
 import Home from "../pages/Home";
 import axios from "axios";
 import { userLoggedIn } from "../feature/user/userSlicer";
+import Dashboard from "../pages/Dashboard";
 
 function Routes() {
   const location = useLocation();
@@ -53,6 +54,7 @@ function Routes() {
           element={isUserAuthenticated ? <PrivateRoute /> : <Login />}
         >
           <Route index element={<Home />} />
+          <Route path="dashboard" element={<Dashboard />} />
         </Route>
       </RouterRoutes>
     </AnimatePresence>

@@ -3,7 +3,8 @@ import { Outlet } from "react-router-dom";
 import Home from "../../pages/Home";
 import { useSelector } from "react-redux";
 import { RootState } from "../../feature/store";
-import axios from "axios";
+import Menu from "../Menu/Menu";
+import tw from "twin.macro";
 
 function PrivateRoute() {
   const isUserAuthenticated: Boolean = useSelector(
@@ -11,11 +12,13 @@ function PrivateRoute() {
   );
 
   return isUserAuthenticated ? (
-    <>
-      <h1>test</h1>
+    <Wrapper>
+      <Menu />
       <Outlet />
-    </>
+    </Wrapper>
   ) : null;
 }
+
+const Wrapper = tw.div`flex`;
 
 export default PrivateRoute;

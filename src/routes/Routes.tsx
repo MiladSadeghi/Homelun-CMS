@@ -5,16 +5,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../feature/store";
 import PrivateRoute from "../components/PrivateRoute";
 import Login from "../components/Login";
-import Home from "../pages/Home";
 import axios from "axios";
 import { userLoggedIn } from "../feature/user/userSlicer";
 import Dashboard from "../pages/Dashboard";
+import { TRole } from "../types/role";
+import Agents from "../pages/Agents";
+import Insight from "../pages/Insight";
+import Properties from "../pages/Properties";
+import Users from "../pages/Users";
+import Profile from "../pages/Profile";
 
 function Routes() {
   const location = useLocation();
   const isUserAuthenticated: Boolean = useSelector(
     (state: RootState) => state.userSlice.isAuthenticated
   );
+  const userRole: TRole | null = useSelector(
+    (state: RootState) => state.userSlice.role
+  );
+
   const dispatch = useDispatch();
   const refreshToken: string | null = localStorage.getItem("kq_c");
 
@@ -53,8 +62,29 @@ function Routes() {
           path="/"
           element={isUserAuthenticated ? <PrivateRoute /> : <Login />}
         >
-          <Route index element={<Home />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard />} />
+          {userRole && userRole === "super_admin" && (
+            <>
+              <Route path="/agents" element={<Agents />} />
+              <Route path="/insight" element={<Insight />} />
+              <Route path="/properties" element={<Properties />} />
+              <Route path="/users" element={<Users />} />
+            </>
+          )}
+          {userRole && userRole === "admin" && (
+            <>
+              <Route path="/agents" element={<Agents />} />
+              <Route path="/insight" element={<Insight />} />
+              <Route path="/properties" element={<Properties />} />
+            </>
+          )}
+          {userRole && userRole === "agent" && (
+            <>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/insight" element={<Insight />} />
+              <Route path="/properties" element={<Properties />} />
+            </>
+          )}
         </Route>
       </RouterRoutes>
     </AnimatePresence>

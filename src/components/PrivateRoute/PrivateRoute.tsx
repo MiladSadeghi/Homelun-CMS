@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import Home from "../../pages/Home";
 import { useSelector } from "react-redux";
 import { RootState } from "../../feature/store";
 import Menu from "../Menu/Menu";

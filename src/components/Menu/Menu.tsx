@@ -30,7 +30,7 @@ function Menu() {
   );
 }
 
-const Wrapper = tw.div`flex flex-col w-[20%] h-screen items-center shadow-lg`;
+const Wrapper = tw.div`flex flex-col w-[18%] h-screen items-center shadow-lg`;
 const Item = styled(NavLink)`
   ${tw`text-center py-4 mb-3 font-bold w-full justify-center items-center flex`} &.active {
     ${tw`bg-[#efe9ff] text-purple-800 font-bold relative before:(absolute left-0 top-0 h-full w-[2px] bg-purple-800)`}

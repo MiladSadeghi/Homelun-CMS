@@ -7,7 +7,7 @@ import { BiHomeHeart } from "react-icons/bi";
 
 const menuItemByRole = (role: TRole): TRoleMenuItem[] => {
   const SuperAdminMenuItem = [
-    { name: "Dashboard", link: "/dashboard", icon: RiDashboardLine },
+    { name: "Dashboard", link: "/", icon: RiDashboardLine },
     { name: "Agents", link: "/agents", icon: MdOutlinePerson4 },
     { name: "Insight", link: "/insight", icon: MdInsights },
     { name: "Properties", link: "/properties", icon: BiHomeHeart },
@@ -15,14 +15,14 @@ const menuItemByRole = (role: TRole): TRoleMenuItem[] => {
   ];
 
   const AdminMenuItem = [
-    { name: "Dashboard", link: "/dashboard", icon: RiDashboardLine },
+    { name: "Dashboard", link: "/", icon: RiDashboardLine },
     { name: "Agents", link: "/agents", icon: MdOutlinePerson4 },
     { name: "Insight", link: "/insight", icon: MdInsights },
     { name: "Properties", link: "/properties", icon: BiHomeHeart },
   ];
 
   const AgentMenuItem = [
-    { name: "Dashboard", link: "/dashboard", icon: RiDashboardLine },
+    { name: "Dashboard", link: "/", icon: RiDashboardLine },
     { name: "Profile", link: "/profile", icon: RiProfileLine },
     { name: "Insight", link: "/insight", icon: MdInsights },
     { name: "Properties", link: "/properties", icon: BiHomeHeart },

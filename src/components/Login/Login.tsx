@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import tw from "twin.macro";
 import Logo from "../../helper/Logo";
-import { login, loginForm } from "../../helper/formSchema";
+import { loginForm } from "../../helper/formSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { userLoggedIn } from "../../feature/user/userSlicer";
+import { TLogin } from "../../types/form";
 
 function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -18,14 +19,14 @@ function Login() {
     formState: { isValid },
     getValues,
     reset,
-  } = useForm<login>({
+  } = useForm<TLogin>({
     resolver: zodResolver(loginForm),
   });
 
   const handleLogin = async () => {
     try {
       setIsLoading(true);
-      const { data } = await axios.post("/user/login", {
+      const { data } = await axios.post("/auth/login", {
         email: getValues().email,
         password: getValues().password,
       });

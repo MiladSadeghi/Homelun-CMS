@@ -1,6 +1,11 @@
 import { AnimatePresence } from "framer-motion";
 import React, { useEffect } from "react";
-import { Routes as RouterRoutes, useLocation, Route } from "react-router-dom";
+import {
+  Routes as RouterRoutes,
+  useLocation,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../feature/store";
 import PrivateRoute from "../components/PrivateRoute";
@@ -14,6 +19,7 @@ import Insight from "../pages/Insight";
 import Properties from "../pages/Properties";
 import Users from "../pages/Users";
 import Profile from "../pages/Profile";
+import AddUser from "../pages/AddUser";
 
 function Routes() {
   const location = useLocation();
@@ -31,12 +37,13 @@ function Routes() {
     const whoAmI = async () => {
       if (refreshToken) {
         try {
-          const { data } = await axios.get("/user/who-am-i", {
+          const { data } = await axios.get("/auth/who-am-i", {
             headers: {
               "content-type": "application/json",
               authorization: `Bearer ${refreshToken}`,
             },
           });
+          console.log(data);
           dispatch(
             userLoggedIn({
               accessToken: data.accessToken,
@@ -69,6 +76,7 @@ function Routes() {
               <Route path="/insight" element={<Insight />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/users" element={<Users />} />
+              <Route path="/users/add" element={<AddUser />} />
             </>
           )}
           {userRole && userRole === "admin" && (
@@ -86,6 +94,7 @@ function Routes() {
             </>
           )}
         </Route>
+        <Route path="*" element={<Navigate to={"/"} />} />
       </RouterRoutes>
     </AnimatePresence>
   );

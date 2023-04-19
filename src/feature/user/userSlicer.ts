@@ -19,6 +19,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     userLoggedIn: (state, { payload }: { payload: TUser }) => {
+      console.log(payload.accessToken);
       state.isAuthenticated = payload.isAuthenticated;
       state.accessToken = payload.accessToken;
       state.name = payload.name;

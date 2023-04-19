@@ -10,6 +10,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { RootState } from "../../feature/store";
+import axiosInstance from "../../services/api";
 
 function AddUser() {
   const Roles = [
@@ -17,9 +18,6 @@ function AddUser() {
     { role: "Admin", value: "admin" },
     { role: "Super Admin", value: "super_admin" },
   ];
-  const userToken = useSelector(
-    (state: RootState) => state.userSlice.accessToken
-  );
 
   const [selected, setSelected] = useState(Roles[0]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -37,19 +35,10 @@ function AddUser() {
   const createUserHandler = async () => {
     try {
       setIsLoading(true);
-      const { data } = await axios.post(
-        "/user/create-user",
-        {
-          ...getValues(),
-          role: selected.value,
-        },
-        {
-          headers: {
-            "content-type": "application/json",
-            authorization: `Bearer ${userToken}`,
-          },
-        }
-      );
+      const { data } = await axiosInstance.post("user/create-user", {
+        ...getValues(),
+        role: selected.value,
+      });
       setIsLoading(false);
       toast.success(data.message);
       reset();

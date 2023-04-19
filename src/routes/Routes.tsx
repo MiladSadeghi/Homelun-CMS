@@ -38,12 +38,8 @@ function Routes() {
       if (refreshToken) {
         try {
           const { data } = await axios.get("/auth/who-am-i", {
-            headers: {
-              "content-type": "application/json",
-              authorization: `Bearer ${refreshToken}`,
-            },
+            headers: { authorization: `Bearer ${refreshToken}` },
           });
-          console.log(data);
           dispatch(
             userLoggedIn({
               accessToken: data.accessToken,

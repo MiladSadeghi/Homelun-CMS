@@ -35,7 +35,7 @@ function AddUser() {
   const createUserHandler = async () => {
     try {
       setIsLoading(true);
-      const { data } = await axiosInstance.post("user/create-user", {
+      const { data } = await axiosInstance.post("user", {
         ...getValues(),
         role: selected.value,
       });

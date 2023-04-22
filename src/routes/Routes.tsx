@@ -11,7 +11,7 @@ import { RootState } from "../feature/store";
 import PrivateRoute from "../components/PrivateRoute";
 import Login from "../components/Login";
 import axios from "axios";
-import { userLoggedIn } from "../feature/user/userSlicer";
+import { userLoggedIn } from "../feature/user/userSlice";
 import Dashboard from "../pages/Dashboard";
 import { TRole } from "../types/role";
 import Agents from "../pages/Agents";

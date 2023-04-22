@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { userLoggedIn } from "../../feature/user/userSlicer";
+import { userLoggedIn } from "../../feature/user/userSlice";
 import { TLogin } from "../../types/form";
 
 function Login() {

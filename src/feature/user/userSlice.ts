@@ -1,11 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-type TUser = {
-  isAuthenticated: boolean;
-  accessToken: string | null;
-  name: string | null;
-  role: "super_admin" | "admin" | "agent" | null;
-};
+import { TUser } from "../../types/user";
 
 const initialState: TUser = {
   isAuthenticated: false,

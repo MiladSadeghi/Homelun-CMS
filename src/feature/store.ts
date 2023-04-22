@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userSlice from "./user/userSlicer";
+import userSlice from "./user/userSlice";
+import userListSlice from "./lists/userListSlice";
 
 export const store = configureStore({
-  reducer: { userSlice },
+  reducer: { userSlice, userListSlice },
   devTools: import.meta.env.NODE_ENV !== "production",
 });
 

@@ -1,5 +1,4 @@
-import { RootState } from "../feature/store";
-import { setToken } from "../feature/user/userSlicer";
+import { setToken } from "../feature/user/userSlice";
 import axiosInstance from "./api";
 const setup = (store: any) => {
   axiosInstance.interceptors.request.use(

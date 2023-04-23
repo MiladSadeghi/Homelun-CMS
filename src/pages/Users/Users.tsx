@@ -17,10 +17,15 @@ import { toast } from "react-toastify";
 
 function Users() {
   const dispatch: AppDispatch = useDispatch();
-  const users = useSelector((state: RootState) => state.userListSlice.users);
+  const users: TUsers[] = useSelector(
+    (state: RootState) => state.userListSlice.users
+  );
 
   const [selectUserIdx, setSelectUserIdx] = useState<number | null>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [searchUser, setSearchUser] = useState<TUsers[]>([]);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -34,13 +39,29 @@ function Users() {
     getUsers();
   }, []);
 
+  useEffect(() => {
+    if (search !== "") {
+      setIsSearching(true);
+      const searchResult = users.filter((user: TUsers) =>
+        user.name?.includes(search)
+      );
+      setSearchUser(searchResult);
+    } else {
+      setIsSearching(false);
+    }
+  }, [search]);
+
   const enableUserLogin = async () => {
     try {
       setIsLoading(true);
+      const userId = (
+        isSearching ? searchUser![selectUserIdx!] : users[selectUserIdx!]
+      )._id;
       await axiosInstance.put("/user/enable", {
-        userId: users[selectUserIdx!]?._id,
+        userId,
       });
-      dispatch(enableUser(users[selectUserIdx!]?._id as string));
+      dispatch(enableUser(userId));
+      updateSearchedUser(userId, "disabled", false);
       setIsLoading(false);
     } catch (error: any) {
       toast.error(error?.response?.data?.message);
@@ -51,10 +72,14 @@ function Users() {
   const disabledUserLogin = async () => {
     try {
       setIsLoading(true);
+      const userId = (
+        isSearching ? searchUser![selectUserIdx!] : users[selectUserIdx!]
+      )._id;
       await axiosInstance.put("/user/disable", {
-        userId: users[selectUserIdx!]?._id,
+        userId,
       });
-      dispatch(disableUser(users[selectUserIdx!]?._id as string));
+      dispatch(disableUser(userId));
+      updateSearchedUser(userId, "disabled", true);
       setIsLoading(false);
     } catch (error: any) {
       toast.error(error?.response?.data?.message);
@@ -65,10 +90,14 @@ function Users() {
   const publishAgent = async () => {
     try {
       setIsLoading(true);
+      const userId = (
+        isSearching ? searchUser![selectUserIdx!] : users[selectUserIdx!]
+      )._id;
       await axiosInstance.put("/user/publish", {
-        userId: users[selectUserIdx!]?._id,
+        userId,
       });
-      dispatch(publishAgentRole(users[selectUserIdx!]?._id as string));
+      dispatch(publishAgentRole(userId));
+      updateSearchedUser(userId, "publish", true);
       setIsLoading(false);
     } catch (error: any) {
       toast.error(error?.response?.data?.message);
@@ -79,14 +108,41 @@ function Users() {
   const unPublishAgent = async () => {
     try {
       setIsLoading(true);
+      const userId = (
+        isSearching ? searchUser![selectUserIdx!] : users[selectUserIdx!]
+      )._id;
       await axiosInstance.put("/user/unpublish", {
-        userId: users[selectUserIdx!]?._id,
+        userId,
       });
-      dispatch(unpublishAgent(users[selectUserIdx!]?._id as string));
+      dispatch(unpublishAgent(userId));
+      updateSearchedUser(userId, "publish", false);
       setIsLoading(false);
     } catch (error: any) {
       toast.error(error?.response?.data?.message);
       setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log(searchUser);
+  }, [searchUser]);
+
+  const updateSearchedUser = (userId: string, key: string, value: boolean) => {
+    if (isSearching) {
+      setSearchUser((prevSearchUser) => {
+        const selectedUserIndex = prevSearchUser.findIndex(
+          (user: TUsers) => user._id === userId
+        );
+        const updatedUser = {
+          ...prevSearchUser[selectedUserIndex],
+          [key]: value,
+        };
+        return [
+          ...prevSearchUser.slice(0, selectedUserIndex),
+          updatedUser,
+          ...prevSearchUser.slice(selectedUserIndex + 1),
+        ];
+      });
     }
   };
 
@@ -95,16 +151,26 @@ function Users() {
       <div tw="grid-cols-12 gap-4 grid">
         <Link
           to="/users/add"
-          tw="py-1 px-3 rounded-3xl bg-blue-500 text-white text-sm flex items-center font-semibold col-span-2 w-fit"
+          tw="py-1 px-3 rounded-3xl bg-blue-500 text-white text-sm flex items-center font-semibold col-span-1 w-fit"
         >
           ADD NEW
           <BiPlus size={18} tw="ml-1" />
         </Link>
-        <div tw="col-span-8"></div>
+        <div tw="col-span-9">
+          <input
+            type="search"
+            tw="w-full h-full border px-2 py-1 shadow-lg rounded-sm"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
         <div tw="col-span-2 flex gap-1">
           {selectUserIdx !== (null || undefined) && (
             <>
-              {users[selectUserIdx!].disabled ? (
+              {(isSearching
+                ? searchUser![selectUserIdx!]
+                : users[selectUserIdx!]
+              ).disabled ? (
                 <UserButton
                   tw="bg-green-700 cursor-pointer"
                   onClick={enableUserLogin}
@@ -121,8 +187,14 @@ function Users() {
                   disabled?
                 </UserButton>
               )}
-              {users[selectUserIdx!].role === "agent" ? (
-                users[selectUserIdx!].publish ? (
+              {(isSearching
+                ? searchUser![selectUserIdx!]
+                : users[selectUserIdx!]
+              ).role === "agent" ? (
+                (isSearching
+                  ? searchUser![selectUserIdx!]
+                  : users[selectUserIdx!]
+                ).publish ? (
                   <UserButton
                     tw="bg-yellow-400 cursor-pointer"
                     onClick={unPublishAgent}
@@ -144,7 +216,7 @@ function Users() {
           )}
         </div>
       </div>
-      {users[0] ? (
+      {users[0] || searchUser![0] ? (
         <Table>
           <THead>
             <THeadRow>
@@ -158,50 +230,56 @@ function Users() {
             </THeadRow>
           </THead>
           <TBody>
-            {users.map((user: TUsers, userIdx: number) => (
-              <tr key={user._id} tw="odd:bg-gray-200 even:bg-gray-300">
-                <TBodyCell tw="px-1">
-                  <input
-                    type="radio"
-                    name="select-user"
-                    value={userIdx}
-                    tw="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 align-middle mx-auto"
-                    onChange={() => setSelectUserIdx(userIdx)}
-                  />
-                </TBodyCell>
-                <TBodyCell>{user.name}</TBodyCell>
-                <TBodyCell>{user.role}</TBodyCell>
-                <TBodyCell>{new Date(user.createdAt).toDateString()}</TBodyCell>
-                <TBodyCell>{new Date(user.updatedAt).toDateString()}</TBodyCell>
-                <TBodyCell tw="gap-2 space-y-1">
-                  <div tw="flex gap-1">
-                    {user.role === "agent" ? (
-                      user.publish ? (
-                        <Badge tw="bg-green-700">Publish</Badge>
-                      ) : (
+            {(isSearching ? searchUser! : users).map(
+              (user: TUsers, userIdx: number) => (
+                <tr key={user._id} tw="odd:bg-gray-200 even:bg-gray-300">
+                  <TBodyCell tw="px-1">
+                    <input
+                      type="radio"
+                      name="select-user"
+                      value={userIdx}
+                      tw="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 align-middle mx-auto"
+                      onChange={() => setSelectUserIdx(userIdx)}
+                    />
+                  </TBodyCell>
+                  <TBodyCell>{user.name}</TBodyCell>
+                  <TBodyCell tw="capitalize">{user.role}</TBodyCell>
+                  <TBodyCell>
+                    {new Date(user.createdAt).toDateString()}
+                  </TBodyCell>
+                  <TBodyCell>
+                    {new Date(user.updatedAt).toDateString()}
+                  </TBodyCell>
+                  <TBodyCell tw="gap-2 space-y-1">
+                    <div tw="flex gap-1">
+                      {user.role === "agent" ? (
+                        user.publish ? (
+                          <Badge tw="bg-green-700">Publish</Badge>
+                        ) : (
+                          <Badge
+                            tw="bg-yellow-400"
+                            title="Unpublished agent does not appear on the client side."
+                          >
+                            unpublished
+                          </Badge>
+                        )
+                      ) : null}
+                      {user.disabled ? (
                         <Badge
-                          tw="bg-yellow-400"
-                          title="Unpublished agent does not appear on the client side."
+                          tw="bg-red-600"
+                          title="Disabled accounts cannot login to CMS."
                         >
-                          unpublished
+                          Disabled
                         </Badge>
-                      )
-                    ) : null}
-                    {user.disabled ? (
-                      <Badge
-                        tw="bg-red-600"
-                        title="Disabled accounts cannot login to CMS."
-                      >
-                        Disabled
-                      </Badge>
-                    ) : (
-                      <Badge tw="bg-green-700">Enabled</Badge>
-                    )}
-                  </div>
-                </TBodyCell>
-                <TBodyCell>{user.createdBy.name}</TBodyCell>
-              </tr>
-            ))}
+                      ) : (
+                        <Badge tw="bg-green-700">Enabled</Badge>
+                      )}
+                    </div>
+                  </TBodyCell>
+                  <TBodyCell>{user.createdBy.name}</TBodyCell>
+                </tr>
+              )
+            )}
           </TBody>
         </Table>
       ) : (

@@ -20,6 +20,7 @@ import Properties from "../pages/Properties";
 import Users from "../pages/Users";
 import Profile from "../pages/Profile";
 import AddUser from "../pages/AddUser";
+import AddProperty from "../pages/AddProperty/AddProperty";
 
 function Routes() {
   const location = useLocation();
@@ -73,6 +74,7 @@ function Routes() {
               <Route path="/properties" element={<Properties />} />
               <Route path="/users" element={<Users />} />
               <Route path="/users/add" element={<AddUser />} />
+              <Route path="/properties/add" element={<AddProperty />} />
             </>
           )}
           {userRole && userRole === "admin" && (

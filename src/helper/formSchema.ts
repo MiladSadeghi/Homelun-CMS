@@ -1,6 +1,6 @@
 import { ZodType, z } from "zod";
 import { TRole } from "../types/role";
-import { TCreateUser, TLogin } from "../types/form";
+import { TCreateUser, TLogin, TPropertyForm } from "../types/form";
 
 export const loginForm: ZodType<TLogin> = z.object({
   email: z
@@ -23,4 +23,16 @@ export const createUserForm: ZodType<TCreateUser> = z.object({
     .string()
     .nonempty("password is required")
     .min(8, { message: "Too short" }),
+});
+
+export const createPropertyForm: ZodType<TPropertyForm> = z.object({
+  address: z.string().nonempty("address is required"),
+  furnished: z.enum(["true", "false"]),
+  status: z.enum(["rent", "buy"]),
+  agent: z.string().nonempty("agent is required"),
+  exclusivity: z.string().nonempty("exclusivity is required"),
+  price: z.string().nonempty("price is required"),
+  offPercent: z.number().min(0).max(100),
+  about: z.string().nonempty("about is required"),
+  map: z.string().nonempty("map is required"),
 });

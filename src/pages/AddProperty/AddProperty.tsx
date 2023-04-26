@@ -93,10 +93,10 @@ function AddProperty() {
       if (!isGalleryOK()) throw Error("Look at gallery!");
       if (!isAmenityOK()) throw Error("Look at amenity!");
       setIsLoading(true);
-      await axiosInstance.post("property", createSubmitBody());
+      const { data } = await axiosInstance.post("property", createSubmitBody());
       setIsLoading(false);
+      toast.success(data.message);
     } catch (error: any) {
-      console.log(error);
       toast.error(error?.response?.data?.message || error.message, {
         position: "top-right",
       });
@@ -187,7 +187,7 @@ function AddProperty() {
           </Button>
           <Button
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || isLoading}
             tw="col-span-12 w-40 mt-6 h-fit justify-self-end justify-center disabled:opacity-75"
           >
             Add

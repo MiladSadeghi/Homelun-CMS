@@ -40,7 +40,6 @@ function Routes() {
 
   const dispatch = useDispatch();
   const refreshToken: string | null = localStorage.getItem("kq_c");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,6 +49,7 @@ function Routes() {
           const { data } = await axios.get("/auth/who-am-i", {
             headers: { authorization: `Bearer ${refreshToken}` },
           });
+          console.log(data);
           dispatch(
             userLoggedIn({
               accessToken: data.accessToken,
@@ -69,16 +69,14 @@ function Routes() {
     const isUserProfileComplete = async () => {
       try {
         if (userRole === "agent") {
-          setIsLoading(true);
           await axiosInstance.get("agent");
-          setIsLoading(false);
+
           dispatch(isProfileCompleted(true));
         }
       } catch (error: any) {
         dispatch(isProfileCompleted(false));
         navigate("/profile");
         toast.error(error.response.data.message);
-        setIsLoading(false);
       }
     };
     isUserProfileComplete();

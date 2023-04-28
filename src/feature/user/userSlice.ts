@@ -22,15 +22,16 @@ const userSlice = createSlice({
     setToken: (state, { payload }) => {
       state.accessToken = payload;
     },
-    userLoggedOut: (state) => {
-      state = initialState;
-    },
     isProfileCompleted: (state, { payload }: { payload: boolean }) => {
       state.profileCompleted = payload;
+    },
+    userLogout: () => {
+      localStorage.removeItem("kq_c");
+      return initialState;
     },
   },
 });
 
-export const { userLoggedIn, setToken, userLoggedOut, isProfileCompleted } =
+export const { userLoggedIn, setToken, isProfileCompleted, userLogout } =
   userSlice.actions;
 export default userSlice.reducer;

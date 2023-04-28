@@ -28,7 +28,7 @@ function Users() {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const { data } = await axiosInstance.get("/user/");
+        const { data } = await axiosInstance.get("/user");
         dispatch(setUsers(data.users));
       } catch (error: any) {
         toast.error(error?.response?.data?.message);

@@ -8,9 +8,7 @@ import { AppDispatch, RootState } from "../../feature/store";
 import {
   disableUser,
   enableUser,
-  publishAgent as publishAgentRole,
   setUsers,
-  unpublishAgent,
 } from "../../feature/lists/userListSlice";
 import { TUsers } from "../../types/user";
 import { toast } from "react-toastify";
@@ -87,42 +85,6 @@ function Users() {
     }
   };
 
-  const publishAgent = async () => {
-    try {
-      setIsLoading(true);
-      const userId = (
-        isSearching ? searchUser![selectUserIdx!] : users[selectUserIdx!]
-      )._id;
-      await axiosInstance.put("/user/publish", {
-        userId,
-      });
-      dispatch(publishAgentRole(userId));
-      updateSearchedUser(userId, "publish", true);
-      setIsLoading(false);
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message);
-      setIsLoading(false);
-    }
-  };
-
-  const unPublishAgent = async () => {
-    try {
-      setIsLoading(true);
-      const userId = (
-        isSearching ? searchUser![selectUserIdx!] : users[selectUserIdx!]
-      )._id;
-      await axiosInstance.put("/user/unpublish", {
-        userId,
-      });
-      dispatch(unpublishAgent(userId));
-      updateSearchedUser(userId, "publish", false);
-      setIsLoading(false);
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message);
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
     console.log(searchUser);
   }, [searchUser]);
@@ -187,31 +149,6 @@ function Users() {
                   disabled?
                 </UserButton>
               )}
-              {(isSearching
-                ? searchUser![selectUserIdx!]
-                : users[selectUserIdx!]
-              ).role === "agent" ? (
-                (isSearching
-                  ? searchUser![selectUserIdx!]
-                  : users[selectUserIdx!]
-                ).publish ? (
-                  <UserButton
-                    tw="bg-yellow-400 cursor-pointer"
-                    onClick={unPublishAgent}
-                    disabled={isLoading}
-                  >
-                    unpublished?
-                  </UserButton>
-                ) : (
-                  <UserButton
-                    tw="bg-green-700 cursor-pointer"
-                    onClick={publishAgent}
-                    disabled={isLoading}
-                  >
-                    published?
-                  </UserButton>
-                )
-              ) : null}
             </>
           )}
         </div>
@@ -252,18 +189,6 @@ function Users() {
                   </TBodyCell>
                   <TBodyCell tw="gap-2 space-y-1">
                     <div tw="flex gap-1">
-                      {user.role === "agent" ? (
-                        user.publish ? (
-                          <Badge tw="bg-green-700">Publish</Badge>
-                        ) : (
-                          <Badge
-                            tw="bg-yellow-400"
-                            title="Unpublished agent does not appear on the client side."
-                          >
-                            unpublished
-                          </Badge>
-                        )
-                      ) : null}
                       {user.disabled ? (
                         <Badge
                           tw="bg-red-600"

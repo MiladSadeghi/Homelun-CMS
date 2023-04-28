@@ -6,10 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createUserForm } from "../../helper/formSchema";
 import { TCreateUser } from "../../types/form";
-import axios from "axios";
 import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
-import { RootState } from "../../feature/store";
 import axiosInstance from "../../services/api";
 
 function AddUser() {
@@ -87,7 +84,7 @@ function AddUser() {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Listbox.Options tw="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg text-lg">
+                <Listbox.Options tw="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg text-lg z-10">
                   {Roles.map((role, roleIdx) => (
                     <Listbox.Option
                       key={roleIdx}

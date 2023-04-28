@@ -17,3 +17,16 @@ export type TPropertyForm = {
   status: "rent" | "buy";
   agent: string;
 };
+
+export type TAgentForm = {
+  name: string;
+  field: string;
+  phoneNumber: string;
+  social: {
+    instagram?: string;
+    linkedin?: string;
+    twitter?: string;
+  };
+  about: string;
+  cover: string;
+};

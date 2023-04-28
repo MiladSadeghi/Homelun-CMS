@@ -6,6 +6,7 @@ const initialState: TUser = {
   accessToken: null,
   name: null,
   role: null,
+  profileCompleted: false,
 };
 
 const userSlice = createSlice({
@@ -24,8 +25,12 @@ const userSlice = createSlice({
     userLoggedOut: (state) => {
       state = initialState;
     },
+    isProfileCompleted: (state, { payload }: { payload: boolean }) => {
+      state.profileCompleted = payload;
+    },
   },
 });
 
-export const { userLoggedIn, setToken, userLoggedOut } = userSlice.actions;
+export const { userLoggedIn, setToken, userLoggedOut, isProfileCompleted } =
+  userSlice.actions;
 export default userSlice.reducer;

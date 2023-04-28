@@ -3,6 +3,7 @@ export type TUser = {
   accessToken: string | null;
   name: string | null;
   role: "super_admin" | "admin" | "agent" | null;
+  profileCompleted?: boolean;
 };
 
 export type TUsers = Pick<TUser, "name" | "role"> & {

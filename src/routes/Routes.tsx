@@ -1,17 +1,18 @@
 import { AnimatePresence } from "framer-motion";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Routes as RouterRoutes,
   useLocation,
   Route,
   Navigate,
+  useNavigate,
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../feature/store";
 import PrivateRoute from "../components/PrivateRoute";
 import Login from "../components/Login";
 import axios from "axios";
-import { userLoggedIn } from "../feature/user/userSlice";
+import { isProfileCompleted, userLoggedIn } from "../feature/user/userSlice";
 import Dashboard from "../pages/Dashboard";
 import { TRole } from "../types/role";
 import Agents from "../pages/Agents";
@@ -21,6 +22,8 @@ import Users from "../pages/Users";
 import Profile from "../pages/Profile";
 import AddUser from "../pages/AddUser";
 import AddProperty from "../pages/AddProperty/AddProperty";
+import axiosInstance from "../services/api";
+import { toast } from "react-toastify";
 
 function Routes() {
   const location = useLocation();
@@ -31,8 +34,14 @@ function Routes() {
     (state: RootState) => state.userSlice.role
   );
 
+  const isAgentProfileComplete: boolean | any = useSelector(
+    (state: RootState) => state.userSlice.profileCompleted
+  );
+
   const dispatch = useDispatch();
   const refreshToken: string | null = localStorage.getItem("kq_c");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const whoAmI = async () => {
@@ -49,11 +58,31 @@ function Routes() {
               role: data.role,
             })
           );
-        } catch (error) {}
+        } catch (error: any) {}
       }
     };
+
     whoAmI();
   }, []);
+
+  useEffect(() => {
+    const isUserProfileComplete = async () => {
+      try {
+        if (userRole === "agent") {
+          setIsLoading(true);
+          await axiosInstance.get("agent");
+          setIsLoading(false);
+          dispatch(isProfileCompleted(true));
+        }
+      } catch (error: any) {
+        dispatch(isProfileCompleted(false));
+        navigate("/profile");
+        toast.error(error.response.data.message);
+        setIsLoading(false);
+      }
+    };
+    isUserProfileComplete();
+  }, [isUserAuthenticated]);
 
   useEffect(() => {
     window.scrollTo({ top: 0 });
@@ -66,9 +95,9 @@ function Routes() {
           path="/"
           element={isUserAuthenticated ? <PrivateRoute /> : <Login />}
         >
-          <Route path="/" element={<Dashboard />} />
           {userRole && userRole === "super_admin" && (
             <>
+              <Route path="/" element={<Dashboard />} />
               <Route path="/agents" element={<Agents />} />
               <Route path="/insight" element={<Insight />} />
               <Route path="/properties" element={<Properties />} />
@@ -79,6 +108,7 @@ function Routes() {
           )}
           {userRole && userRole === "admin" && (
             <>
+              <Route path="/" element={<Dashboard />} />
               <Route path="/agents" element={<Agents />} />
               <Route path="/insight" element={<Insight />} />
               <Route path="/properties" element={<Properties />} />
@@ -86,9 +116,19 @@ function Routes() {
           )}
           {userRole && userRole === "agent" && (
             <>
+              <Route
+                path="/"
+                element={isAgentProfileComplete && <Dashboard />}
+              />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/insight" element={<Insight />} />
-              <Route path="/properties" element={<Properties />} />
+              <Route
+                path="/insight"
+                element={isAgentProfileComplete && <Insight />}
+              />
+              <Route
+                path="/properties"
+                element={isAgentProfileComplete && <Properties />}
+              />
             </>
           )}
         </Route>

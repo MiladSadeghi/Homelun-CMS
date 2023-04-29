@@ -53,7 +53,7 @@ function Profile() {
   const updateProfile = async () => {
     try {
       setIsLoading((prevState) => [...prevState, (prevState[1] = true)]);
-      const { data } = await axiosInstance.post("agent", {
+      const { data } = await axiosInstance.post("agent/profile", {
         ...getValues(),
       });
       dispatch(isProfileCompleted(true));

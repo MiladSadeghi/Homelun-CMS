@@ -14,7 +14,8 @@ import PropertyAmenities from "../../components/Modals/PropertyAmenities.modal";
 import { TAmenitiesInput, TGalleryInput } from "../../types/modals";
 import { useSelector } from "react-redux";
 import { RootState } from "../../feature/store";
-import { TUsers } from "../../types/user";
+import { TAgent } from "../../types/user";
+import ReactSelect from "react-select";
 
 function AddProperty() {
   const [galleryModalToggle, setGalleryModalToggle] = useState<boolean>(false);
@@ -32,15 +33,21 @@ function AddProperty() {
     handleSubmit,
     formState: { isValid, errors },
     getValues,
+    setValue,
     reset,
   } = useForm<TPropertyForm>({
     resolver: zodResolver(createPropertyForm),
   });
 
+  console.log(getValues());
+
   useEffect(() => {
     const getAgents = async () => {
-      if (loggedUserRole === "agent") return false;
-      const { data } = await axiosInstance.get("user/agents");
+      if (loggedUserRole === "agent") {
+        setValue("agent", "");
+        return false;
+      }
+      const { data } = await axiosInstance.get("agent");
       setAgents(data.agents);
     };
     getAgents();
@@ -96,6 +103,7 @@ function AddProperty() {
       const { data } = await axiosInstance.post("property", createSubmitBody());
       setIsLoading(false);
       toast.success(data.message);
+      reset();
     } catch (error: any) {
       toast.error(error?.response?.data?.message || error.message, {
         position: "top-right",
@@ -136,21 +144,39 @@ function AddProperty() {
             <Option value="buy">For Buy</Option>
           </Select>
           {loggedUserRole && loggedUserRole !== "agent" && (
-            <Select
-              defaultValue=""
-              tw="col-span-4 border border-gray-300"
-              {...register("agent")}
-              required
-            >
-              <Option value="" disabled hidden>
-                Agent
-              </Option>
-              {agents?.map((agent: TUsers) => (
-                <Option key={agent._id} value={agent._id}>
-                  {agent.name}
-                </Option>
-              ))}
-            </Select>
+            <ReactSelect
+              tw="col-span-4 h-full hover:border-none"
+              isSearchable={false}
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  height: "100%",
+                  border: "1px solid rgb(209 213 219)",
+                  boxShadow: state.isFocused ? "none" : "none",
+                  outline: "none",
+                  "&:hover": { border: "1px solid rgb(209 213 219)" },
+                }),
+              }}
+              placeholder="Select Agent..."
+              options={agents?.map((agent: TAgent) => {
+                return {
+                  label: agent.name,
+                  value: agent._id,
+                  cover: agent.cover,
+                };
+              })}
+              onChange={(e) => setValue("agent", e.value)}
+              formatOptionLabel={(agent: any) => (
+                <div tw="flex items-center">
+                  <img
+                    src={agent.cover}
+                    alt="country-image"
+                    tw="h-9 w-9 rounded-full mr-3"
+                  />
+                  <span>{agent.label}</span>
+                </div>
+              )}
+            />
           )}
 
           <Input

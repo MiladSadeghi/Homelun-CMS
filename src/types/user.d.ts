@@ -15,3 +15,14 @@ export type TUsers = Pick<TUser, "name" | "role"> & {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type TAgent = {
+  _id: string;
+  user: string;
+  about: string;
+  field: string;
+  name: string;
+  phoneNumber: string;
+  cover: string;
+  publish: boolean;
+};

@@ -49,7 +49,6 @@ function Routes() {
           const { data } = await axios.get("/auth/who-am-i", {
             headers: { authorization: `Bearer ${refreshToken}` },
           });
-          console.log(data);
           dispatch(
             userLoggedIn({
               accessToken: data.accessToken,
@@ -69,7 +68,7 @@ function Routes() {
     const isUserProfileComplete = async () => {
       try {
         if (userRole === "agent") {
-          await axiosInstance.get("agent");
+          await axiosInstance.get("agent/profile");
 
           dispatch(isProfileCompleted(true));
         }
@@ -126,6 +125,10 @@ function Routes() {
               <Route
                 path="/properties"
                 element={isAgentProfileComplete && <Properties />}
+              />
+              <Route
+                path="/properties/add"
+                element={isAgentProfileComplete && <AddProperty />}
               />
             </>
           )}

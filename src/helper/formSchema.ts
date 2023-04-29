@@ -28,7 +28,7 @@ export const createPropertyForm: ZodType<TPropertyForm> = z.object({
   address: z.string().nonempty("address is required"),
   furnished: z.enum(["true", "false"]),
   status: z.enum(["rent", "buy"]),
-  agent: z.string().nonempty("agent is required"),
+  agent: z.string(),
   exclusivity: z.string().nonempty("exclusivity is required"),
   price: z.string().nonempty("price is required"),
   offPercent: z.number().min(0).max(100),

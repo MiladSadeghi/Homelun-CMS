@@ -30,4 +30,5 @@ export type TProperty = {
   updatedAt: Date;
   status: boolean;
   publish: boolean;
+  status: "rent" | "buy";
 };

@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import tw, { styled } from "twin.macro";
-
 import { v4 } from "uuid";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPropertyForm } from "../../helper/formSchema";
@@ -16,8 +14,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../feature/store";
 import { TAgent } from "../../types/user";
 import ReactSelect from "react-select";
+import { useNavigate, useParams } from "react-router-dom";
+import { BiLeftArrowAlt } from "react-icons/bi";
 
-function AddProperty() {
+function Property() {
+  const { propertyId } = useParams();
   const [galleryModalToggle, setGalleryModalToggle] = useState<boolean>(false);
   const [galleryInputs, setGalleryInputs] = useState<TGalleryInput[]>([]);
   const [amenitiesModalToggle, setAmenitiesModalToggle] =
@@ -28,6 +29,10 @@ function AddProperty() {
     (state: RootState) => state.userSlice.role
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const AgentSelectBoxRef: any = useRef();
+  const [fetchLoading, setFetchLoading] = useState<boolean>(false);
+
   const {
     register,
     handleSubmit,
@@ -39,8 +44,6 @@ function AddProperty() {
     resolver: zodResolver(createPropertyForm),
   });
 
-  console.log(getValues());
-
   useEffect(() => {
     const getAgents = async () => {
       if (loggedUserRole === "agent") {
@@ -49,11 +52,57 @@ function AddProperty() {
       }
       const { data } = await axiosInstance.get("agent");
       setAgents(data.agents);
+      if (!propertyId) {
+        setGalleryInputs([{ key: v4(), value: "", isValid: false }]);
+        setAmenitiesInputs([{ key: v4(), title: "", value: "" }]);
+      } else {
+        const getProperty = async () => {
+          try {
+            setFetchLoading(true);
+            const { data } = await axiosInstance.get("property", {
+              params: { propertyId },
+            });
+
+            setValue("address", data.properties.address);
+            setValue("furnished", data.properties.furnished ? "true" : "false");
+            setValue("status", data.properties.status);
+            setValue("agent", data.properties.agent._id);
+            AgentSelectBoxRef!.current!.setValue({
+              label: data.properties.agent.name,
+              value: data.properties.agent._id,
+              cover: data.properties.agent.cover,
+            });
+            setValue("exclusivity", data.properties.exclusivity.join(","));
+            setValue("price", data.properties.price);
+            setValue("offPercent", data.properties.offPercent);
+            setValue("about", data.properties.about);
+            setValue(
+              "map",
+              `${data.properties.location.lat},${data.properties.location.long}`
+            );
+            const gallery = data.properties.gallery.map((gallery: any) => {
+              return { key: gallery._id, value: gallery.url, isValid: true };
+            });
+            const amenity = data.properties.amenities.map((amenity: any) => {
+              return {
+                key: amenity._id,
+                title: amenity.amenityTitle,
+                value: amenity.amenity.join(","),
+              };
+            });
+            setGalleryInputs(gallery);
+            setAmenitiesInputs(amenity);
+            setFetchLoading(false);
+          } catch (error: any) {
+            toast.error(error.response.data.message || error.message);
+            setFetchLoading(false);
+            navigate(-1);
+          }
+        };
+        getProperty();
+      }
     };
     getAgents();
-
-    setGalleryInputs([{ key: v4(), value: "", isValid: false }]);
-    setAmenitiesInputs([{ key: v4(), title: "", value: "" }]);
   }, []);
 
   const isGalleryOK = () => {
@@ -92,6 +141,7 @@ function AddProperty() {
       gallery: galleryInputs.map((input: TGalleryInput) => {
         return { url: input.value };
       }),
+      ...(propertyId && { propertyId }),
     };
   };
 
@@ -100,7 +150,9 @@ function AddProperty() {
       if (!isGalleryOK()) throw Error("Look at gallery!");
       if (!isAmenityOK()) throw Error("Look at amenity!");
       setIsLoading(true);
-      const { data } = await axiosInstance.post("property", createSubmitBody());
+      const { data } = propertyId
+        ? await axiosInstance.put("property", createSubmitBody())
+        : await axiosInstance.post("property", createSubmitBody());
       setIsLoading(false);
       toast.success(data.message);
       reset();
@@ -113,8 +165,18 @@ function AddProperty() {
   };
 
   return (
-    <Wrapper>
-      <div>
+    <Wrapper isLoading={fetchLoading}>
+      <nav tw="bg-white py-4 px-8 shadow-sm flex items-center">
+        <BiLeftArrowAlt
+          size={24}
+          onClick={() => navigate(-1)}
+          tw="mr-2 cursor-pointer"
+        />
+        <h3 tw="font-bold text-xl ">
+          {propertyId ? "Edit Property" : "Add Property"}
+        </h3>
+      </nav>
+      <div tw="p-8">
         <form
           tw="grid-cols-12 gap-4 grid"
           onSubmit={handleSubmit(submitHandler)}
@@ -145,6 +207,7 @@ function AddProperty() {
           </Select>
           {loggedUserRole && loggedUserRole !== "agent" && (
             <ReactSelect
+              ref={AgentSelectBoxRef}
               tw="col-span-4 h-full hover:border-none"
               isSearchable={false}
               styles={{
@@ -216,7 +279,7 @@ function AddProperty() {
             disabled={!isValid || isLoading}
             tw="col-span-12 w-40 mt-6 h-fit justify-self-end justify-center disabled:opacity-75"
           >
-            Add
+            {propertyId ? "Edit" : "Add"}
           </Button>
         </form>
       </div>
@@ -232,7 +295,13 @@ function AddProperty() {
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen p-8 relative`;
+const Wrapper = styled.div`
+  ${tw`w-full bg-[#F4F7FE] h-screen relative`} ${({
+    isLoading,
+  }: {
+    isLoading: boolean;
+  }) => (isLoading ? tw`opacity-50` : tw``)}
+`;
 
 const Input = tw.input`col-span-4 py-2 px-2 rounded-md border border-gray-300 border-solid`;
 
@@ -240,4 +309,4 @@ const Select = tw.select`col-span-4 py-2 px-2 rounded-md outline-none`;
 const Option = tw.option`text-lg px-1`;
 const Button = tw.button`rounded-md !bg-teal-600 text-white text-sm flex items-center font-semibold h-full  py-2 px-2`;
 
-export default AddProperty;
+export default Property;

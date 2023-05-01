@@ -61,7 +61,7 @@ function Properties() {
   const unPublishAgent = async () => {
     try {
       isSetStatusLoading(true);
-      await axiosInstance.post("/property/status", {
+      await axiosInstance.post("/property/publish", {
         propertyId: selectedProperty?._id!,
         status: false,
       });
@@ -167,7 +167,7 @@ function Properties() {
                         )}
                       </Td>
                       <Td>
-                        <Edit>
+                        <Edit to={`/properties/${property._id}`}>
                           Edit <HiArrowRight tw="ml-2" />
                         </Edit>
                       </Td>
@@ -192,7 +192,9 @@ const Tr = tw.tr`border-[#F4F7FE] border-[5px] border-solid`;
 const Td = tw.td`py-2 px-1 bg-white first-of-type:(rounded-tl-2xl rounded-bl-2xl) last-of-type:(rounded-tr-2xl rounded-br-2xl)`;
 
 const Badge = tw.span`border border-solid rounded-lg  px-2 py-[2px] text-xs font-bold`;
-const Edit = tw.button` py-2 px-4 bg-blue-200 border border-solid border-blue-700 text-blue-700 text-sm font-bold rounded-xl flex items-center`;
+const Edit = tw(
+  Link
+)` py-2 px-4 bg-blue-200 border border-solid border-blue-700 text-blue-700 text-sm font-bold rounded-xl flex items-center justify-center`;
 const Button = styled.button`
   ${tw`py-2 px-3 rounded-xl  text-white text-sm flex items-center font-semibold col-span-2 disabled:opacity-60`} ${({
     isPublish,

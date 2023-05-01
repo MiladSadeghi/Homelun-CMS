@@ -21,9 +21,9 @@ import Properties from "../pages/Properties";
 import Users from "../pages/Users";
 import Profile from "../pages/Profile";
 import AddUser from "../pages/AddUser";
-import AddProperty from "../pages/AddProperty/AddProperty";
 import axiosInstance from "../services/api";
 import { toast } from "react-toastify";
+import Property from "../pages/Property/Property";
 
 function Routes() {
   const location = useLocation();
@@ -100,7 +100,8 @@ function Routes() {
               <Route path="/properties" element={<Properties />} />
               <Route path="/users" element={<Users />} />
               <Route path="/users/add" element={<AddUser />} />
-              <Route path="/properties/add" element={<AddProperty />} />
+              <Route path="/properties/add" element={<Property />} />
+              <Route path="/properties/:propertyId" element={<Property />} />
             </>
           )}
           {userRole && userRole === "admin" && (
@@ -128,7 +129,7 @@ function Routes() {
               />
               <Route
                 path="/properties/add"
-                element={isAgentProfileComplete && <AddProperty />}
+                element={isAgentProfileComplete && <Property />}
               />
             </>
           )}

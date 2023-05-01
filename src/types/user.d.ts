@@ -25,4 +25,5 @@ export type TAgent = {
   phoneNumber: string;
   cover: string;
   publish: boolean;
+  slug: string;
 };

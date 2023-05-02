@@ -13,6 +13,7 @@ import {
   unPublishProperty,
 } from "../../feature/lists/propertyListSlice";
 import { HiArrowRight } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 function Properties() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -22,7 +23,14 @@ function Properties() {
   const dispatch: AppDispatch = useDispatch();
   const isAgent: boolean =
     useSelector((state: RootState) => state.userSlice.role) === "agent";
-  const [selectedProperty, setSelectedProperty] = useState<TProperty>();
+  const [selectedProperty, setSelectedProperty] = useState<TProperty | null>();
+  const urlParams = new URLSearchParams(window.location.search);
+  console.log(urlParams.getAll("search"));
+  const [search, setSearch] = useState<string>(urlParams.get("search") || "");
+  const navigate = useNavigate();
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [searchProperty, setSearchProperty] = useState<TProperty[]>();
+  const [isStatusLoading, isSetStatusLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const getProperties = async () => {
@@ -38,12 +46,28 @@ function Properties() {
     };
     getProperties();
   }, []);
-  const [isStatusLoading, isSetStatusLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (search !== "") {
+      setIsSearching(true);
+      urlParams.set("search", search);
+      navigate(`?${urlParams.toString()}`, { replace: true });
+      const searchResult = properties.filter((property: TProperty) =>
+        property.address.toLowerCase()?.includes(search)
+      );
+      setSelectedProperty(null);
+      setSearchProperty(searchResult);
+    } else {
+      setIsSearching(false);
+      urlParams.delete("search");
+      navigate(`?${urlParams.toString()}`, { replace: true });
+    }
+  }, [search, navigate]);
 
   const publishAgent = async () => {
     try {
       isSetStatusLoading(true);
-      await axiosInstance.post("/property/status", {
+      await axiosInstance.post("/property/publish", {
         propertyId: selectedProperty?._id!,
         status: true,
       });
@@ -52,6 +76,7 @@ function Properties() {
       setSelectedProperty((prevState: any) => {
         return { ...prevState, publish: true };
       });
+      updateSearchedProperty(true);
       isSetStatusLoading(false);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || error.message);
@@ -70,9 +95,29 @@ function Properties() {
         return { ...prevState, publish: false };
       });
       isSetStatusLoading(false);
+      updateSearchedProperty(false);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || error.message);
       isSetStatusLoading(false);
+    }
+  };
+
+  const updateSearchedProperty = async (value: boolean) => {
+    if (isSearching) {
+      setSearchProperty((prevProperty: any) => {
+        const selectedPropertyIndex = prevProperty.findIndex(
+          (property: TProperty) => property._id === selectedProperty?._id
+        );
+        const updatedUser = {
+          ...prevProperty[selectedPropertyIndex],
+          publish: value,
+        };
+        return [
+          ...prevProperty.slice(0, selectedPropertyIndex),
+          updatedUser,
+          ...prevProperty.slice(selectedPropertyIndex + 1),
+        ];
+      });
     }
   };
 
@@ -86,7 +131,13 @@ function Properties() {
           ADD NEW
           <BiPlus size={18} tw="ml-1" />
         </Link>
-        <input tw="h-full rounded-lg w-full col-span-9 drop-shadow-lg bg-purple-800 text-white px-3" />
+        <input
+          tw="h-full rounded-lg w-full col-span-9 drop-shadow-lg bg-purple-800 text-white px-3"
+          value={search}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSearch(e.target.value)
+          }
+        />
         {selectedProperty && (
           <Button
             onClick={selectedProperty.publish ? unPublishAgent : publishAgent}
@@ -100,13 +151,13 @@ function Properties() {
       <div tw="p-8">
         {isLoading ? (
           <h1 tw="w-full">Please Wait...</h1>
-        ) : properties ? (
+        ) : properties || searchProperty ? (
           <div tw="w-full">
             <table tw="w-full">
               <Thead>
                 <Tr>
                   {!isAgent && <Th></Th>}
-                  <Th>ID</Th>
+                  <Th>Property ID</Th>
                   <Th>Address</Th>
                   {!isAgent && <Th>Agent</Th>}
                   <Th>Created Date</Th>
@@ -115,64 +166,70 @@ function Properties() {
                 </Tr>
               </Thead>
               <tbody>
-                {properties![0] &&
-                  properties?.map((property: TProperty) => (
-                    <Tr key={property._id}>
-                      {!isAgent && (
-                        <Td>
-                          <input
-                            type="checkbox"
-                            name="select-property"
-                            checked={selectedProperty?._id === property?._id}
-                            onChange={() => setSelectedProperty(property)}
-                            tw="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 align-middle mx-auto"
-                          />
-                        </Td>
-                      )}
-                      <Td tw="font-bold">{property._id}</Td>
-                      <Td>{property.address}</Td>
-                      {!isAgent ? (
-                        property.agent ? (
-                          <Td tw="flex items-center">
-                            <img
-                              width={64}
-                              height={64}
-                              src={property?.agent?.cover}
-                              alt={property.agent.name}
-                              tw="rounded-full mr-3"
+                {(properties![0] || searchProperty!) &&
+                  (isSearching ? searchProperty : properties)?.map(
+                    (property: TProperty) => (
+                      <Tr key={property._id}>
+                        {!isAgent && (
+                          <Td>
+                            <input
+                              type="checkbox"
+                              name="select-property"
+                              checked={selectedProperty?._id === property?._id}
+                              onChange={() => setSelectedProperty(property)}
+                              tw="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 align-middle mx-auto"
                             />
-                            {property.agent.name}
                           </Td>
-                        ) : (
-                          <Td>null</Td>
-                        )
-                      ) : (
-                        ""
-                      )}
-                      <Td>
-                        {new Date(property.createdAt).toLocaleString("en-US", {
-                          timeZone:
-                            Intl.DateTimeFormat().resolvedOptions().timeZone,
-                        })}
-                      </Td>
-                      <Td>
-                        {property.publish ? (
-                          <Badge tw="border-green-800 bg-green-600 text-green-800 bg-opacity-20">
-                            Publish
-                          </Badge>
-                        ) : (
-                          <Badge tw="border-yellow-600 bg-yellow-300 bg-opacity-20 text-yellow-600">
-                            Unpublished
-                          </Badge>
                         )}
-                      </Td>
-                      <Td>
-                        <Edit to={`/properties/${property._id}`}>
-                          Edit <HiArrowRight tw="ml-2" />
-                        </Edit>
-                      </Td>
-                    </Tr>
-                  ))}
+                        <Td tw="font-bold">{property._id}</Td>
+                        <Td>{property.address}</Td>
+                        {!isAgent ? (
+                          property.agent ? (
+                            <Td tw="flex items-center">
+                              <img
+                                width={64}
+                                height={64}
+                                src={property?.agent?.cover}
+                                alt={property.agent.name}
+                                tw="rounded-full mr-3"
+                              />
+                              {property.agent.name}
+                            </Td>
+                          ) : (
+                            <Td>null</Td>
+                          )
+                        ) : (
+                          ""
+                        )}
+                        <Td>
+                          {new Date(property.createdAt).toLocaleString(
+                            "en-US",
+                            {
+                              timeZone:
+                                Intl.DateTimeFormat().resolvedOptions()
+                                  .timeZone,
+                            }
+                          )}
+                        </Td>
+                        <Td>
+                          {property.publish ? (
+                            <Badge tw="border-green-800 bg-green-600 text-green-800 bg-opacity-20">
+                              Publish
+                            </Badge>
+                          ) : (
+                            <Badge tw="border-yellow-600 bg-yellow-300 bg-opacity-20 text-yellow-600">
+                              Unpublished
+                            </Badge>
+                          )}
+                        </Td>
+                        <Td>
+                          <Edit to={`/properties/${property._id}`}>
+                            Edit <HiArrowRight tw="ml-2" />
+                          </Edit>
+                        </Td>
+                      </Tr>
+                    )
+                  )}
               </tbody>
             </table>
           </div>

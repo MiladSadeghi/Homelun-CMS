@@ -85,10 +85,6 @@ function Users() {
     }
   };
 
-  useEffect(() => {
-    console.log(searchUser);
-  }, [searchUser]);
-
   const updateSearchedUser = (userId: string, key: string, value: boolean) => {
     if (isSearching) {
       setSearchUser((prevSearchUser) => {

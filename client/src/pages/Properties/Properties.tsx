@@ -25,7 +25,6 @@ function Properties() {
     useSelector((state: RootState) => state.userSlice.role) === "agent";
   const [selectedProperty, setSelectedProperty] = useState<TProperty | null>();
   const urlParams = new URLSearchParams(window.location.search);
-  console.log(urlParams.getAll("search"));
   const [search, setSearch] = useState<string>(urlParams.get("search") || "");
   const navigate = useNavigate();
   const [isSearching, setIsSearching] = useState<boolean>(false);

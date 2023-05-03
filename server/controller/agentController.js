@@ -2,9 +2,16 @@ import AgentModel from "../models/AgentModel.js";
 import PropertyModel from "../models/PropertyModel.js";
 
 export const getAgentProfile = async (req, res) => {
+  const slug = req.query.agentSlug;
   try {
     const { _id } = req;
-    const getAgentProfile = await AgentModel.findOne({ user: _id });
+    const getAgentProfile = slug
+      ? await AgentModel.findOne({ slug })
+      : await AgentModel.findOne({ user: _id });
+    if (!getAgentProfile)
+      return res
+        .status(404)
+        .json({ error: true, message: "cant find agent profile" });
     const validationError = await getAgentProfile.validateSync();
     if (validationError) {
       return res
@@ -22,14 +29,14 @@ export const getAgentProfile = async (req, res) => {
 export const updateAgentProfile = async (req, res) => {
   try {
     const { _id } = req;
+    const { agentSlug } = req.body;
     const { name, field, phoneNumber, about, cover } = req.body;
     if (!name || !field || !phoneNumber || !about || !cover)
       return res
         .status(400)
         .json({ error: true, message: "please fill all field" });
-
     const updatedAgent = await AgentModel.findOneAndUpdate(
-      { user: _id },
+      { ...(agentSlug ? { slug: agentSlug } : { user: _id }) },
       { name, field, phoneNumber, about, cover, publish: true },
       { new: true }
     );
@@ -48,9 +55,13 @@ export const updateAgentProfile = async (req, res) => {
 };
 
 export const getAgent = async (req, res) => {
+  const user = req.params.id;
+  const slug = req.params.agentSlug;
   try {
     const findAgents = user
-      ? await AgentModel.find({ "&and": [{ user, publish: true }] })
+      ? slug
+        ? await AgentModel.find({ slug })
+        : await AgentModel.find({ "&and": [{ user, publish: true }] })
       : await AgentModel.find({ publish: true });
     if (findAgents.length === 0)
       return res
@@ -80,7 +91,6 @@ export const getAgents = async (req, res) => {
     const agentsWithListing = await Promise.all(agentsWithListingPromises);
     return res.status(200).json({ error: false, agents: agentsWithListing });
   } catch (error) {
-    console.log(error);
     return res
       .status(500)
       .json({ error: true, message: "Internal Server Error" });

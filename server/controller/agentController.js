@@ -1,4 +1,5 @@
 import AgentModel from "../models/AgentModel.js";
+import PropertyModel from "../models/PropertyModel.js";
 
 export const getAgentProfile = async (req, res) => {
   try {
@@ -47,18 +48,41 @@ export const updateAgentProfile = async (req, res) => {
 };
 
 export const getAgent = async (req, res) => {
-  const user = req.params.id;
-
   try {
     const findAgents = user
       ? await AgentModel.find({ "&and": [{ user, publish: true }] })
       : await AgentModel.find({ publish: true });
-    if (!findAgents)
+    if (findAgents.length === 0)
       return res
         .status(404)
         .json({ error: true, message: "cant find agents or agent!" });
     return res.status(200).json({ error: false, agents: findAgents });
   } catch (error) {
     res.status(500).json({ error: true, message: "Internal Server Error" });
+  }
+};
+
+export const getAgents = async (req, res) => {
+  try {
+    const findAgents = await AgentModel.find({});
+
+    if (findAgents.length === 0)
+      return res
+        .status(404)
+        .json({ error: true, message: "cant find agents or agent!" });
+
+    const agentsWithListingPromises = findAgents.map(async (agent) => {
+      const agentObj = agent.toObject();
+      agentObj.agentListing = await PropertyModel.find({ agent: agent._id });
+
+      return await agentObj;
+    });
+    const agentsWithListing = await Promise.all(agentsWithListingPromises);
+    return res.status(200).json({ error: false, agents: agentsWithListing });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ error: true, message: "Internal Server Error" });
   }
 };

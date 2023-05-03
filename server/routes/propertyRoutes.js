@@ -10,8 +10,8 @@ import { isLoggedIn } from "../middleware/user.js";
 const propertyRoutes = express.Router();
 
 propertyRoutes.post("/", isLoggedIn, createProperty);
-propertyRoutes.get("/", getProperties);
-propertyRoutes.post("/publish", updatePropertyPublishStatus);
-propertyRoutes.put("/", updateProperty);
+propertyRoutes.get("/", isLoggedIn, getProperties);
+propertyRoutes.post("/publish", isLoggedIn, updatePropertyPublishStatus);
+propertyRoutes.put("/", isLoggedIn, updateProperty);
 
 export default propertyRoutes;

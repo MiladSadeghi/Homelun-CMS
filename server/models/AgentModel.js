@@ -40,12 +40,6 @@ const AgentSchema = Schema(
       },
       setRequiredOnUpdate: true,
     },
-    agentListing: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "property",
-      },
-    ],
     cover: {
       type: String,
       required: function () {

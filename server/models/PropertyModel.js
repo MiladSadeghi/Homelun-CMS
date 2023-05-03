@@ -61,6 +61,7 @@ const PropertySchema = new mongoose.Schema(
     publish: {
       type: Boolean,
       required: true,
+      default: false,
     },
     slug: {
       type: String,

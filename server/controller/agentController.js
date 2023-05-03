@@ -86,3 +86,18 @@ export const getAgents = async (req, res) => {
       .json({ error: true, message: "Internal Server Error" });
   }
 };
+
+export const updateAgentPublishStatus = async (req, res) => {
+  const { agentId, status } = req.body;
+  if (!agentId || typeof status !== "boolean")
+    return res
+      .status(400)
+      .json({ error: true, message: "please select a agent" });
+
+  try {
+    await AgentModel.findByIdAndUpdate({ _id: agentId }, { publish: status });
+    return res.sendStatus(200);
+  } catch (error) {
+    res.status(500).json({ error: true, message: error.message });
+  }
+};

@@ -5,13 +5,13 @@ import {
   getProperties,
   updateProperty,
 } from "../controller/propertyController.js";
-import { isLoggedIn } from "../middleware/user.js";
+import { isAdmin, isLoggedIn } from "../middleware/user.js";
 
 const propertyRoutes = express.Router();
 
 propertyRoutes.post("/", isLoggedIn, createProperty);
 propertyRoutes.get("/", isLoggedIn, getProperties);
-propertyRoutes.post("/publish", isLoggedIn, updatePropertyPublishStatus);
+propertyRoutes.post("/publish", isAdmin, updatePropertyPublishStatus);
 propertyRoutes.put("/", isLoggedIn, updateProperty);
 
 export default propertyRoutes;

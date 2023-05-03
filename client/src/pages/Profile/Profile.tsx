@@ -8,17 +8,24 @@ import { TAgentForm } from "../../types/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch } from "react-redux";
 import { isProfileCompleted } from "../../feature/user/userSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { BiLeftArrowAlt } from "react-icons/bi";
 
 function Profile() {
   const [isLoading, setIsLoading] = useState<boolean[]>([false, false]);
   const dispatch = useDispatch();
+  const { agentSlug } = useParams();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getAgentProfile = async () => {
       try {
         setIsLoading((prevState) => [...prevState, (prevState[0] = true)]);
         const {
           data: { profile },
-        } = await axiosInstance.get("agent");
+        } = await axiosInstance.get("agent/profile", {
+          ...(agentSlug && { params: { agentSlug } }),
+        });
         setValue("about", profile.about);
         setValue("cover", profile.cover);
         setValue("field", profile.field);
@@ -35,6 +42,7 @@ function Profile() {
         );
         dispatch(isProfileCompleted(false));
         setIsLoading((prevState) => [...prevState, (prevState[0] = false)]);
+        navigate(-1);
       }
     };
     getAgentProfile();
@@ -55,6 +63,7 @@ function Profile() {
       setIsLoading((prevState) => [...prevState, (prevState[1] = true)]);
       const { data } = await axiosInstance.post("agent/profile", {
         ...getValues(),
+        ...(agentSlug && { agentSlug }),
       });
       dispatch(isProfileCompleted(true));
       toast.success(data.message);
@@ -69,8 +78,20 @@ function Profile() {
   if (isLoading[0]) return <>Loading...</>;
   return (
     <Wrapper>
-      <h1 tw="font-bold text-3xl mb-7">Profile</h1>
-      <form tw="grid-cols-3 gap-4 grid" onSubmit={handleSubmit(updateProfile)}>
+      <nav tw="bg-white py-4 px-8 shadow-sm flex items-center">
+        <BiLeftArrowAlt
+          size={24}
+          onClick={() => navigate(-1)}
+          tw="mr-2 cursor-pointer"
+        />
+        <h3 tw="font-bold text-xl ">
+          {agentSlug ? "Edit Profile" : "Profile"}
+        </h3>
+      </nav>
+      <form
+        tw="grid-cols-3 gap-4 grid p-8"
+        onSubmit={handleSubmit(updateProfile)}
+      >
         <Input type="text" placeholder="name" {...register("name")} />
         <Input type="text" placeholder="field" {...register("field")} />
         <Input
@@ -96,14 +117,14 @@ function Profile() {
         <Input type="text" placeholder="cover" {...register("cover")} />
         <Textarea placeholder="About" {...register("about")} rows={6} />
         <Button type="submit" disabled={!isValid || isLoading[1]}>
-          Add
+          Edit
         </Button>
       </form>
     </Wrapper>
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen p-8`;
+const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen`;
 const Input = tw.input`py-2 px-3 rounded-lg border-gray-300 border-solid border h-fit`;
 const Textarea = tw.textarea`py-2 px-3 rounded-lg border-gray-300 border-solid border outline-none resize-none`;
 const Button = tw.button`rounded-md !bg-teal-700 text-white text-sm flex items-center font-semibold py-2 px-2 col-span-1 w-full h-fit justify-self-end justify-center col-start-3 row-start-4 disabled:opacity-60`;

@@ -173,7 +173,7 @@ function Agents() {
                     </Edit>
                   </Td>
                   <Td>
-                    <Edit to="#">
+                    <Edit to={`${agent.slug}`}>
                       Edit Profile <HiArrowRight tw="ml-2" />
                     </Edit>
                   </Td>

@@ -96,6 +96,7 @@ function Routes() {
             <>
               <Route path="/" element={<Dashboard />} />
               <Route path="/agents" element={<Agents />} />
+              <Route path="/agents/:agentSlug" element={<Profile />} />
               <Route path="/insight" element={<Insight />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/users" element={<Users />} />
@@ -110,6 +111,7 @@ function Routes() {
               <Route path="/agents" element={<Agents />} />
               <Route path="/insight" element={<Insight />} />
               <Route path="/properties" element={<Properties />} />
+              <Route path="/properties/:propertyId" element={<Property />} />
             </>
           )}
           {userRole && userRole === "agent" && (

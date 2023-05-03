@@ -13,22 +13,18 @@ const propertyListSlice = createSlice({
     setProperties: (state, { payload }: { payload: TProperty[] }) => {
       state.properties = payload;
     },
-    publishProperty: (state, { payload }: { payload: string }) => {
+    publishProperty: (
+      state,
+      { payload }: { payload: { propertyId: string; publish: boolean } }
+    ) => {
       const index = state.properties.findIndex(
-        (property: TProperty) => property._id === payload
+        (property: TProperty) => property._id === payload.propertyId
       );
-      state.properties[index].publish = true;
-    },
-    unPublishProperty: (state, { payload }: { payload: string }) => {
-      const index = state.properties.findIndex(
-        (property: TProperty) => property._id === payload
-      );
-      state.properties[index].publish = false;
+      state.properties[index].publish = payload.publish;
     },
   },
 });
 
-export const { setProperties, publishProperty, unPublishProperty } =
-  propertyListSlice.actions;
+export const { setProperties, publishProperty } = propertyListSlice.actions;
 
 export default propertyListSlice.reducer;

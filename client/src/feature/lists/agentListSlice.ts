@@ -12,8 +12,17 @@ const agentSlice = createSlice({
     setAgents: (state, { payload }: { payload: TAgent[] }) => {
       state.agents = payload;
     },
+    publishAgent: (
+      state,
+      { payload }: { payload: { agentId: string; publish: boolean } }
+    ) => {
+      const index = state.agents!.findIndex(
+        (agent: TAgent) => agent._id === payload.agentId
+      );
+      state.agents![index].publish = payload.publish;
+    },
   },
 });
 
-export const { setAgents } = agentSlice.actions;
+export const { setAgents, publishAgent } = agentSlice.actions;
 export default agentSlice.reducer;

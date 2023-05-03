@@ -10,7 +10,6 @@ import { AppDispatch, RootState } from "../../feature/store";
 import {
   publishProperty,
   setProperties,
-  unPublishProperty,
 } from "../../feature/lists/propertyListSlice";
 import { HiArrowRight } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
@@ -63,38 +62,22 @@ function Properties() {
     }
   }, [search, navigate]);
 
-  const publishAgent = async () => {
+  const changePublishProperty = async (publish: boolean) => {
     try {
       isSetStatusLoading(true);
       await axiosInstance.post("/property/publish", {
         propertyId: selectedProperty?._id!,
-        status: true,
+        status: publish,
       });
 
-      dispatch(publishProperty(selectedProperty?._id!));
+      dispatch(
+        publishProperty({ propertyId: selectedProperty?._id!, publish })
+      );
       setSelectedProperty((prevState: any) => {
-        return { ...prevState, publish: true };
+        return { ...prevState, publish };
       });
-      updateSearchedProperty(true);
+      updateSearchedProperty(publish);
       isSetStatusLoading(false);
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || error.message);
-      isSetStatusLoading(false);
-    }
-  };
-  const unPublishAgent = async () => {
-    try {
-      isSetStatusLoading(true);
-      await axiosInstance.post("/property/publish", {
-        propertyId: selectedProperty?._id!,
-        status: false,
-      });
-      dispatch(unPublishProperty(selectedProperty?._id!));
-      setSelectedProperty((prevState: any) => {
-        return { ...prevState, publish: false };
-      });
-      isSetStatusLoading(false);
-      updateSearchedProperty(false);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || error.message);
       isSetStatusLoading(false);
@@ -139,7 +122,9 @@ function Properties() {
         />
         {selectedProperty && (
           <Button
-            onClick={selectedProperty.publish ? unPublishAgent : publishAgent}
+            onClick={(e) =>
+              changePublishProperty(selectedProperty.publish ? false : true)
+            }
             disabled={isStatusLoading}
             isPublish={selectedProperty.publish}
           >

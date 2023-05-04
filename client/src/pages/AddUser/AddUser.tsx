@@ -1,40 +1,42 @@
-import { Listbox, Transition } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import tw from "twin.macro";
-import { HiOutlineChevronDown } from "react-icons/hi";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createUserForm } from "../../helper/formSchema";
 import { TCreateUser } from "../../types/form";
 import { toast } from "react-toastify";
 import axiosInstance from "../../services/api";
+import { BiLeftArrowAlt } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
+import ReactSelect from "react-select";
 
 function AddUser() {
   const Roles = [
-    { role: "Agent", value: "agent" },
-    { role: "Admin", value: "admin" },
-    { role: "Super Admin", value: "super_admin" },
+    { label: "Agent", value: "agent" },
+    { label: "Admin", value: "admin" },
+    { label: "Super Admin", value: "super_admin" },
   ];
 
-  const [selected, setSelected] = useState(Roles[0]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
-    formState: { isValid },
+    formState: { isValid, errors },
     getValues,
     reset,
+    setValue,
   } = useForm<TCreateUser>({
     resolver: zodResolver(createUserForm),
   });
 
+  console.log(getValues(), errors);
   const createUserHandler = async () => {
     try {
       setIsLoading(true);
       const { data } = await axiosInstance.post("user", {
         ...getValues(),
-        role: selected.value,
       });
       setIsLoading(false);
       toast.success(data.message);
@@ -45,77 +47,64 @@ function AddUser() {
     }
   };
 
+  useEffect(() => {
+    console.log(getValues());
+  }, [getValues()]);
+
   return (
     <Wrapper>
-      <h1 tw="font-bold text-3xl mb-7">Add New User</h1>
-      <form onSubmit={handleSubmit(createUserHandler)}>
-        <div tw="grid-cols-4 gap-4 grid">
-          <Input type="text" placeholder="name" {...register("name")} />
-          <Input
-            type="email"
-            placeholder="email"
-            tw="col-span-2"
-            {...register("email")}
-          />
-          <Input
-            type="password"
-            placeholder="password"
-            {...register("password")}
-          />
-          <Listbox value={selected} onChange={setSelected}>
-            <div tw="relative mt-1">
-              <Listbox.Button
-                tw="relative w-full cursor-default rounded-lg !bg-white py-2 pl-3 pr-10 text-left font-bold"
-                placeholder="Role"
-              >
-                <span>{selected.role}</span>
-                <span tw="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                  <HiOutlineChevronDown
-                    className="h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </span>
-              </Listbox.Button>
-              <Transition
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Listbox.Options tw="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white shadow-lg text-lg z-10">
-                  {Roles.map((role, roleIdx) => (
-                    <Listbox.Option
-                      key={roleIdx}
-                      value={role}
-                      tw="py-2 px-3 text-base w-full"
-                    >
-                      {({ selected: selectedOption }: any) => (
-                        <>
-                          {selectedOption ? (
-                            <Span tw="bg-[#F4F7FE]">{role.role}</Span>
-                          ) : (
-                            <Span tw="">{role.role}</Span>
-                          )}
-                        </>
-                      )}
-                    </Listbox.Option>
-                  ))}
-                </Listbox.Options>
-              </Transition>
-            </div>
-          </Listbox>
-        </div>
-        <SubmitButton type="submit" disabled={!isValid || isLoading}>
-          {isLoading ? "Loading..." : "Create User"}
-        </SubmitButton>
-      </form>
+      <nav tw="bg-white py-4 px-8 shadow-sm flex items-center">
+        <BiLeftArrowAlt
+          size={24}
+          onClick={() => navigate(-1)}
+          tw="mr-2 cursor-pointer"
+        />
+        <h3 tw="font-bold text-xl ">Add User</h3>
+      </nav>
+      <div tw="p-8">
+        <form onSubmit={handleSubmit(createUserHandler)}>
+          <div tw="grid-cols-4 gap-4 grid">
+            <Input type="text" placeholder="name" {...register("name")} />
+            <Input
+              type="email"
+              placeholder="email"
+              tw="col-span-2"
+              {...register("email")}
+            />
+            <Input
+              type="password"
+              placeholder="password"
+              {...register("password")}
+            />
+            <ReactSelect
+              tw="col-span-1 h-full hover:border-none"
+              isSearchable={false}
+              onChange={(e: any) => setValue("role", e.value)}
+              styles={{
+                control: (baseStyles, state) => ({
+                  ...baseStyles,
+                  height: "100%",
+                  border: "1px solid rgb(209 213 219)",
+                  boxShadow: state.isFocused ? "none" : "none",
+                  outline: "none",
+                  "&:hover": { border: "1px solid rgb(209 213 219)" },
+                }),
+              }}
+              defaultValue={Roles[0]}
+              placeholder="Select Role..."
+              options={Roles}
+            />
+          </div>
+          <SubmitButton type="submit" disabled={!isValid || isLoading}>
+            {isLoading ? "Loading..." : "Create User"}
+          </SubmitButton>
+        </form>
+      </div>
     </Wrapper>
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen p-8 flex flex-col`;
+const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen flex flex-col`;
 
 const Input = tw.input`py-2 px-3 rounded-lg`;
 

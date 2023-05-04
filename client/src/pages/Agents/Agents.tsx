@@ -8,6 +8,7 @@ import { RootState } from "../../feature/store";
 import { TAgent } from "../../types/user";
 import { Link, useNavigate } from "react-router-dom";
 import { HiArrowRight } from "react-icons/hi";
+import Loader from "../../components/Loader/Loader";
 
 function Agents() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -80,7 +81,7 @@ function Agents() {
     if (isSearching) {
       setSearchAgents((prevAgents: any) => {
         const selectedAgentIndex = prevAgents.findIndex(
-          (agent: TAgent) => agent._id === agent?._id
+          (agent: TAgent) => agent._id === selectedAgent?._id
         );
         const updatedUser = {
           ...prevAgents[selectedAgentIndex],
@@ -96,7 +97,7 @@ function Agents() {
   };
 
   return (
-    <Wrapper isLoading={isLoading}>
+    <Wrapper>
       <nav tw="grid-cols-12 gap-4 grid bg-white py-4 px-8 items-center">
         <h3 tw="font-bold text-xl col-span-1 w-fit">Agents</h3>
         <input
@@ -182,20 +183,12 @@ function Agents() {
           </tbody>
         </table>
       </div>
+      <Loader isLoading={isLoading} />
     </Wrapper>
   );
 }
 
-const Wrapper = styled.div`
-  ${tw`w-full bg-[#F4F7FE] h-screen relative`} ${({
-    isLoading,
-  }: {
-    isLoading: boolean;
-  }) =>
-    isLoading
-      ? tw`after:(left-0 top-0 bg-gray-300 absolute w-full h-full bg-opacity-50)`
-      : tw``}
-`;
+const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative`;
 
 const Thead = tw.thead`border-[#F4F7FE] border-[5px] border-solid`;
 const Th = tw.th`text-left py-3 bg-white px-1 first-of-type:(rounded-tl-2xl rounded-bl-2xl) last-of-type:(rounded-tr-2xl rounded-br-2xl)`;

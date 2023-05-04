@@ -22,6 +22,7 @@ export const createUserForm: ZodType<TCreateUser> = z.object({
     .string()
     .nonempty("password is required")
     .min(8, { message: "Too short" }),
+  role: z.enum(["admin", "agent", "super_admin"]),
 });
 
 export const createPropertyForm: ZodType<TPropertyForm> = z.object({

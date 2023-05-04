@@ -12,20 +12,17 @@ const userListSlice = createSlice({
     setUsers: (state, action) => {
       state.users = action.payload;
     },
-    enableUser: (state, { payload }: { payload: string }) => {
+    disableUser: (
+      state,
+      { payload }: { payload: { userId: string; disabled: boolean } }
+    ) => {
       const index = state.users.findIndex(
-        (user: TUsers) => user._id === payload
+        (user: TUsers) => user._id === payload.userId
       );
-      state.users[index].disabled = false;
-    },
-    disableUser: (state, { payload }: { payload: string }) => {
-      const index = state.users.findIndex(
-        (user: TUsers) => user._id === payload
-      );
-      state.users[index].disabled = true;
+      state.users[index].disabled = payload.disabled;
     },
   },
 });
 
-export const { setUsers, enableUser, disableUser } = userListSlice.actions;
+export const { setUsers, disableUser } = userListSlice.actions;
 export default userListSlice.reducer;

@@ -1,7 +1,10 @@
+import { TRole } from "./role";
+
 export type TCreateUser = {
   name: string;
   email: string;
   password: string;
+  role: "admin" | "agent" | "super_admin";
 };
 
 export type TLogin = { email: string; password: string };

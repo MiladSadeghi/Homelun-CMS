@@ -13,6 +13,7 @@ import {
 } from "../../feature/lists/propertyListSlice";
 import { HiArrowRight } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../components/Loader/Loader";
 
 function Properties() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -133,9 +134,7 @@ function Properties() {
         )}
       </nav>
       <div tw="p-8">
-        {isLoading ? (
-          <h1 tw="w-full">Please Wait...</h1>
-        ) : properties || searchProperty ? (
+        {properties || searchProperty ? (
           <div tw="w-full">
             <table tw="w-full">
               <Thead>
@@ -221,11 +220,12 @@ function Properties() {
           <h1>Please Add Data First</h1>
         )}
       </div>
+      <Loader isLoading={isLoading} />
     </Wrapper>
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen `;
+const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative`;
 
 const Thead = tw.thead`border-[#F4F7FE] border-[5px] border-solid`;
 const Th = tw.th`text-left py-3 bg-white px-1 first-of-type:(rounded-tl-2xl rounded-bl-2xl) last-of-type:(rounded-tr-2xl rounded-br-2xl)`;

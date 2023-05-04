@@ -16,6 +16,7 @@ import { TAgent } from "../../types/user";
 import ReactSelect from "react-select";
 import { useNavigate, useParams } from "react-router-dom";
 import { BiLeftArrowAlt } from "react-icons/bi";
+import Loader from "../../components/Loader/Loader";
 
 function Property() {
   const { propertyId } = useParams();
@@ -50,11 +51,13 @@ function Property() {
         setValue("agent", "");
         return false;
       }
+      setFetchLoading(true);
       const { data } = await axiosInstance.get("agent");
       setAgents(data.agents);
       if (!propertyId) {
         setGalleryInputs([{ key: v4(), value: "", isValid: false }]);
         setAmenitiesInputs([{ key: v4(), title: "", value: "" }]);
+        setFetchLoading(false);
       } else {
         const getProperty = async () => {
           try {
@@ -165,7 +168,7 @@ function Property() {
   };
 
   return (
-    <Wrapper isLoading={fetchLoading}>
+    <Wrapper>
       <nav tw="bg-white py-4 px-8 shadow-sm flex items-center">
         <BiLeftArrowAlt
           size={24}
@@ -291,17 +294,12 @@ function Property() {
         toggle={{ amenitiesModalToggle, setAmenitiesModalToggle }}
         inputs={{ amenitiesInputs, setAmenitiesInputs }}
       />
+      <Loader isLoading={fetchLoading} />
     </Wrapper>
   );
 }
 
-const Wrapper = styled.div`
-  ${tw`w-full bg-[#F4F7FE] h-screen relative`} ${({
-    isLoading,
-  }: {
-    isLoading: boolean;
-  }) => (isLoading ? tw`opacity-50` : tw``)}
-`;
+const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative`;
 
 const Input = tw.input`col-span-4 py-2 px-2 rounded-md border border-gray-300 border-solid`;
 

@@ -58,41 +58,17 @@ export const getUsers = async (req, res) => {
   } catch (error) {}
 };
 
-export const enableUser = async (req, res) => {
-  try {
-    const { userId } = req.body;
-    if (!userId)
-      return res
-        .status(400)
-        .json({ error: true, message: "Select a user first" });
-
-    const user = await UserModel.findOneAndUpdate(
-      { _id: userId },
-      { $set: { disabled: false } }
-    );
-    if (!user)
-      return res.status(404).json({ error: true, message: "User not exist!" });
-
-    return res.status(200).json({
-      error: false,
-      message: "User login has been re-enabled.",
-    });
-  } catch (error) {
-    res.status(500).json({ error: true, message: "Internal Server Error" });
-  }
-};
-
 export const disableUser = async (req, res) => {
   try {
-    const { userId } = req.body;
-    if (!userId)
+    const { userId, disabled } = req.body;
+    if (!userId || typeof disabled !== "boolean")
       return res
         .status(400)
         .json({ error: true, message: "Select a user first" });
 
     const user = await UserModel.findOneAndUpdate(
       { _id: userId },
-      { $set: { disabled: true } }
+      { $set: { disabled } }
     );
     if (!user)
       return res.status(404).json({ error: true, message: "User not exist!" });
@@ -100,54 +76,6 @@ export const disableUser = async (req, res) => {
     return res.status(200).json({
       error: false,
       message: "User login has been disabled.",
-    });
-  } catch (error) {
-    res.status(500).json({ error: true, message: "Internal Server Error" });
-  }
-};
-
-export const publishAgent = async (req, res) => {
-  try {
-    const { userId } = req.body;
-    if (!userId)
-      return res
-        .status(400)
-        .json({ error: true, message: "Select a user first" });
-
-    const user = await UserModel.findOneAndUpdate(
-      { $and: [{ role: "agent" }, { _id: userId }] },
-      { $set: { publish: true } }
-    );
-    if (!user)
-      return res.status(404).json({ error: true, message: "User not exist!" });
-
-    return res.status(200).json({
-      error: false,
-      message: "Agent has been published.",
-    });
-  } catch (error) {
-    res.status(500).json({ error: true, message: "Internal Server Error" });
-  }
-};
-
-export const unPublishAgent = async (req, res) => {
-  try {
-    const { userId } = req.body;
-    if (!userId)
-      return res
-        .status(400)
-        .json({ error: true, message: "Select a user first" });
-
-    const user = await UserModel.findOneAndUpdate(
-      { $and: [{ role: "agent" }, { _id: userId }] },
-      { $set: { publish: false } }
-    );
-    if (!user)
-      return res.status(404).json({ error: true, message: "User not exist!" });
-
-    return res.status(200).json({
-      error: false,
-      message: "Agent has been unpublished",
     });
   } catch (error) {
     res.status(500).json({ error: true, message: "Internal Server Error" });

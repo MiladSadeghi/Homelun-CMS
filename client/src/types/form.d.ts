@@ -20,6 +20,8 @@ export type TPropertyForm = {
   status: "rent" | "buy";
   agent?: string;
   area: number;
+  bedrooms: number;
+  bathrooms: number;
 };
 
 export type TAgentForm = {

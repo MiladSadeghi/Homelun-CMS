@@ -147,6 +147,8 @@ function Property() {
       }),
       ...(propertyId && { propertyId }),
       area: data.area,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms,
     };
   };
 
@@ -188,6 +190,16 @@ function Property() {
         >
           <Input placeholder="address" {...register("address")} />
           <Input type="number" placeholder="area" {...register("area")} />
+          <Input
+            type="number"
+            placeholder="bedrooms"
+            {...register("bedrooms")}
+          />
+          <Input
+            type="number"
+            placeholder="bathrooms"
+            {...register("bathrooms")}
+          />
           <Select
             defaultValue=""
             tw="col-span-4 border border-gray-300"

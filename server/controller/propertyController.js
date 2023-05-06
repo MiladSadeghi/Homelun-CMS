@@ -15,6 +15,7 @@ export const createProperty = async (req, res) => {
     location,
     amenities,
     gallery,
+    area,
   } = req.body;
 
   if (
@@ -25,7 +26,8 @@ export const createProperty = async (req, res) => {
     !about ||
     !location ||
     !amenities ||
-    !gallery
+    !gallery ||
+    !area
   ) {
     return res.status(400).json({
       error: true,
@@ -43,6 +45,7 @@ export const createProperty = async (req, res) => {
     location,
     amenities,
     gallery,
+    area,
     slug: address.toLowerCase().replace(/[,\s]+/g, "-"),
   };
 

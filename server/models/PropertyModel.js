@@ -73,6 +73,10 @@ const PropertySchema = new mongoose.Schema(
       enum: ["rent", "buy"],
       default: "rent",
     },
+    area: {
+      type: Number,
+      required: [true, "check area"],
+    },
   },
   { timestamps: true }
 );

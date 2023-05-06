@@ -19,6 +19,7 @@ export type TPropertyForm = {
   map: string;
   status: "rent" | "buy";
   agent?: string;
+  area: number;
 };
 
 export type TAgentForm = {

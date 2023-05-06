@@ -9,6 +9,7 @@ import { disableUser, setUsers } from "../../feature/lists/userListSlice";
 import { TUsers } from "../../types/user";
 import { toast } from "react-toastify";
 import Loader from "../../components/Loader/Loader";
+import { HiArrowRight } from "react-icons/hi";
 
 function Users() {
   const dispatch: AppDispatch = useDispatch();
@@ -130,13 +131,14 @@ function Users() {
           <table tw="w-full">
             <Thead>
               <Tr>
-                <Th>select</Th>
+                <Th></Th>
                 <Th>name</Th>
                 <Th>role</Th>
                 <Th>createAt</Th>
                 <Th>updatedAt</Th>
                 <Th>status</Th>
                 <Th>createdBy</Th>
+                <Th></Th>
               </Tr>
             </Thead>
             <tbody>
@@ -179,6 +181,11 @@ function Users() {
                     </div>
                   </Td>
                   <Td>{user.createdBy.name}</Td>
+                  <Td>
+                    <Edit to={`${user._id}`}>
+                      Edit Profile <HiArrowRight tw="ml-2" />
+                    </Edit>
+                  </Td>
                 </Tr>
               ))}
             </tbody>
@@ -206,5 +213,9 @@ const Button = styled.button`
     isDisabled: boolean;
   }) => (isDisabled ? tw`bg-yellow-600` : tw`bg-green-700`)}
 `;
+
+const Edit = tw(
+  Link
+)` py-2 px-4 bg-blue-200 border border-solid border-blue-700 text-blue-700 text-sm font-bold rounded-xl flex items-center justify-center w-fit`;
 
 export default Users;

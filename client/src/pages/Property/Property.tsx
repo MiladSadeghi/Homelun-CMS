@@ -83,6 +83,7 @@ function Property() {
               "map",
               `${data.properties.location.lat},${data.properties.location.long}`
             );
+            setValue("area", data.properties.area);
             const gallery = data.properties.gallery.map((gallery: any) => {
               return { key: gallery._id, value: gallery.url, isValid: true };
             });
@@ -145,6 +146,7 @@ function Property() {
         return { url: input.value };
       }),
       ...(propertyId && { propertyId }),
+      area: data.area,
     };
   };
 
@@ -185,13 +187,14 @@ function Property() {
           onSubmit={handleSubmit(submitHandler)}
         >
           <Input placeholder="address" {...register("address")} />
+          <Input type="number" placeholder="area" {...register("area")} />
           <Select
             defaultValue=""
             tw="col-span-4 border border-gray-300"
             {...register("furnished")}
           >
             <Option value="" disabled hidden>
-              is furnished
+              Is Furnished?
             </Option>
             <Option value="true">Yes</Option>
             <Option value="false">No</Option>
@@ -203,7 +206,7 @@ function Property() {
             required
           >
             <Option value="" disabled hidden>
-              Status
+              Status?
             </Option>
             <Option value="rent">For Rent</Option>
             <Option value="buy">For Buy</Option>
@@ -254,7 +257,7 @@ function Property() {
             type="number"
             min={0}
             max={100}
-            defaultValue={0}
+            defaultValue=""
             placeholder="off percent (leave it if you don't need it)"
             {...register("offPercent", { valueAsNumber: true })}
           />

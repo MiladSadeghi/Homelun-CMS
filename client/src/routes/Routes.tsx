@@ -20,7 +20,7 @@ import Insight from "../pages/Insight";
 import Properties from "../pages/Properties";
 import Users from "../pages/Users";
 import Profile from "../pages/Profile";
-import AddUser from "../pages/AddUser";
+import User from "../pages/User";
 import axiosInstance from "../services/api";
 import { toast } from "react-toastify";
 import Property from "../pages/Property/Property";
@@ -100,7 +100,8 @@ function Routes() {
               <Route path="/insight" element={<Insight />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/users/add" element={<AddUser />} />
+              <Route path="/users/add" element={<User />} />
+              <Route path="/users/:userId" element={<User />} />
               <Route path="/properties/add" element={<Property />} />
               <Route path="/properties/:propertyId" element={<Property />} />
             </>

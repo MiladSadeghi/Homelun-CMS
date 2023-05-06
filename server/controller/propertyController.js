@@ -16,6 +16,8 @@ export const createProperty = async (req, res) => {
     amenities,
     gallery,
     area,
+    bedrooms,
+    bathrooms,
   } = req.body;
 
   if (
@@ -27,7 +29,9 @@ export const createProperty = async (req, res) => {
     !location ||
     !amenities ||
     !gallery ||
-    !area
+    !area ||
+    !bedrooms ||
+    !bathrooms
   ) {
     return res.status(400).json({
       error: true,
@@ -47,6 +51,8 @@ export const createProperty = async (req, res) => {
     gallery,
     area,
     slug: address.toLowerCase().replace(/[,\s]+/g, "-"),
+    bedrooms,
+    bathrooms,
   };
 
   try {
@@ -141,6 +147,8 @@ export const updateProperty = async (req, res) => {
     amenities,
     gallery,
     propertyId,
+    bedrooms,
+    bathrooms,
   } = req.body;
 
   if (
@@ -152,7 +160,9 @@ export const updateProperty = async (req, res) => {
     !location ||
     !amenities ||
     !gallery ||
-    !propertyId
+    !propertyId ||
+    !bedrooms ||
+    !bathrooms
   ) {
     return res.status(400).json({
       error: true,
@@ -172,6 +182,8 @@ export const updateProperty = async (req, res) => {
     amenities,
     gallery,
     slug: address.toLowerCase().replace(/[,\s]+/g, "-"),
+    bedrooms,
+    bathrooms,
   };
 
   try {

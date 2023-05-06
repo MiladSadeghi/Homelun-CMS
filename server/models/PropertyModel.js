@@ -77,6 +77,14 @@ const PropertySchema = new mongoose.Schema(
       type: Number,
       required: [true, "check area"],
     },
+    bedrooms: {
+      type: Number,
+      required: [true, "check bedroom count"],
+    },
+    bathrooms: {
+      type: Number,
+      required: [true, "check bathroom count"],
+    },
   },
   { timestamps: true }
 );

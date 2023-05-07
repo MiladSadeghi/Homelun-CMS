@@ -134,6 +134,10 @@ function Routes() {
                 path="/properties/add"
                 element={isAgentProfileComplete && <Property />}
               />
+              <Route
+                path="/properties/:propertyId"
+                element={isAgentProfileComplete && <Property />}
+              />
             </>
           )}
         </Route>

@@ -147,22 +147,24 @@ export const updateProperty = async (req, res) => {
     amenities,
     gallery,
     propertyId,
+    area,
     bedrooms,
     bathrooms,
   } = req.body;
 
   if (
-    !address ||
-    typeof furnished !== "boolean" ||
-    !exclusivity ||
-    !price ||
-    !about ||
-    !location ||
-    !amenities ||
-    !gallery ||
-    !propertyId ||
-    !bedrooms ||
-    !bathrooms
+    (!address ||
+      typeof furnished !== "boolean" ||
+      !exclusivity ||
+      !price ||
+      !about ||
+      !location ||
+      !amenities ||
+      !gallery ||
+      !propertyId ||
+      !bedrooms ||
+      !bathrooms,
+    !area)
   ) {
     return res.status(400).json({
       error: true,
@@ -184,6 +186,7 @@ export const updateProperty = async (req, res) => {
     slug: address.toLowerCase().replace(/[,\s]+/g, "-"),
     bedrooms,
     bathrooms,
+    area,
   };
 
   try {

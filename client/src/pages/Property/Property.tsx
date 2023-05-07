@@ -47,13 +47,13 @@ function Property() {
 
   useEffect(() => {
     const getAgents = async () => {
+      setFetchLoading(true);
       if (loggedUserRole === "agent") {
         setValue("agent", "");
-        return false;
+      } else {
+        const { data } = await axiosInstance.get("agent");
+        setAgents(data.agents);
       }
-      setFetchLoading(true);
-      const { data } = await axiosInstance.get("agent");
-      setAgents(data.agents);
       if (!propertyId) {
         setGalleryInputs([{ key: v4(), value: "", isValid: false }]);
         setAmenitiesInputs([{ key: v4(), title: "", value: "" }]);
@@ -61,20 +61,12 @@ function Property() {
       } else {
         const getProperty = async () => {
           try {
-            setFetchLoading(true);
             const { data } = await axiosInstance.get("property", {
               params: { propertyId },
             });
-
             setValue("address", data.properties.address);
             setValue("furnished", data.properties.furnished ? "true" : "false");
             setValue("status", data.properties.status);
-            setValue("agent", data.properties.agent._id);
-            AgentSelectBoxRef!.current!.setValue({
-              label: data.properties.agent.name,
-              value: data.properties.agent._id,
-              cover: data.properties.agent.cover,
-            });
             setValue("exclusivity", data.properties.exclusivity.join(","));
             setValue("price", data.properties.price);
             setValue("offPercent", data.properties.offPercent);
@@ -84,6 +76,8 @@ function Property() {
               `${data.properties.location.lat},${data.properties.location.long}`
             );
             setValue("area", data.properties.area);
+            setValue("bedrooms", data.properties.bedrooms);
+            setValue("bathrooms", data.properties.bathrooms);
             const gallery = data.properties.gallery.map((gallery: any) => {
               return { key: gallery._id, value: gallery.url, isValid: true };
             });
@@ -94,14 +88,21 @@ function Property() {
                 value: amenity.amenity.join(","),
               };
             });
+            if (loggedUserRole !== "agent") {
+              setValue("agent", data.properties.agent._id);
+              AgentSelectBoxRef!.current!.setValue({
+                label: data.properties.agent.name,
+                value: data.properties.agent._id,
+                cover: data.properties.agent.cover,
+              });
+            }
             setGalleryInputs(gallery);
             setAmenitiesInputs(amenity);
-            setFetchLoading(false);
           } catch (error: any) {
-            toast.error(error.response.data.message || error.message);
-            setFetchLoading(false);
             navigate(-1);
+            toast.error(error.response.data.message || error.message);
           }
+          setFetchLoading(false);
         };
         getProperty();
       }
@@ -163,6 +164,7 @@ function Property() {
       setIsLoading(false);
       toast.success(data.message);
       reset();
+      navigate(-1);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || error.message, {
         position: "top-right",

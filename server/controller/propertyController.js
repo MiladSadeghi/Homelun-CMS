@@ -150,21 +150,23 @@ export const updateProperty = async (req, res) => {
     area,
     bedrooms,
     bathrooms,
+    status,
   } = req.body;
 
   if (
-    (!address ||
-      typeof furnished !== "boolean" ||
-      !exclusivity ||
-      !price ||
-      !about ||
-      !location ||
-      !amenities ||
-      !gallery ||
-      !propertyId ||
-      !bedrooms ||
-      !bathrooms,
-    !area)
+    !address ||
+    typeof furnished !== "boolean" ||
+    !exclusivity ||
+    !price ||
+    !about ||
+    !location ||
+    !amenities ||
+    !gallery ||
+    !propertyId ||
+    !bedrooms ||
+    !bathrooms ||
+    !status ||
+    !area
   ) {
     return res.status(400).json({
       error: true,
@@ -187,6 +189,7 @@ export const updateProperty = async (req, res) => {
     bedrooms,
     bathrooms,
     area,
+    status,
   };
 
   try {

@@ -67,7 +67,7 @@ function Property() {
             setValue("address", data.properties.address);
             setValue("furnished", data.properties.furnished ? "true" : "false");
             setValue("status", data.properties.status);
-            setValue("exclusivity", data.properties.exclusivity.join(","));
+            setValue("exclusivity", data.properties.exclusivity.join(", "));
             setValue("price", data.properties.price);
             setValue("offPercent", data.properties.offPercent);
             setValue("about", data.properties.about);
@@ -101,8 +101,9 @@ function Property() {
           } catch (error: any) {
             navigate(-1);
             toast.error(error.response.data.message || error.message);
+          } finally {
+            setFetchLoading(false);
           }
-          setFetchLoading(false);
         };
         getProperty();
       }
@@ -130,13 +131,17 @@ function Property() {
     const data = getValues();
     return {
       address: data.address,
-      furnished: Boolean(data.furnished),
-      exclusivity: data.exclusivity.split(","),
+      furnished: data.furnished === "true" ? true : false,
+      exclusivity: data.exclusivity.replace(/,\s*$/, "").split(/,\s+/),
+      status: data.status,
       price: data.price,
       offPercent: data.offPercent,
       about: data.about,
       agent: data.agent,
-      location: { lat: data.map.split(",")[0], long: data.map.split(",")[1] },
+      location: {
+        lat: data.map.split(", ")[0],
+        long: data.map.split(", ")[1],
+      },
       amenities: amenitiesInputs.map((input: TAmenitiesInput) => {
         return {
           amenityTitle: input.title,
@@ -191,16 +196,20 @@ function Property() {
           onSubmit={handleSubmit(submitHandler)}
         >
           <Input placeholder="address" {...register("address")} />
-          <Input type="number" placeholder="area" {...register("area")} />
+          <Input
+            type="number"
+            placeholder="area"
+            {...register("area", { valueAsNumber: true })}
+          />
           <Input
             type="number"
             placeholder="bedrooms"
-            {...register("bedrooms")}
+            {...register("bedrooms", { valueAsNumber: true })}
           />
           <Input
             type="number"
             placeholder="bathrooms"
-            {...register("bathrooms")}
+            {...register("bathrooms", { valueAsNumber: true })}
           />
           <Select
             defaultValue=""
@@ -223,7 +232,7 @@ function Property() {
               Status?
             </Option>
             <Option value="rent">For Rent</Option>
-            <Option value="buy">For Buy</Option>
+            <Option value="sale">For Sale</Option>
           </Select>
           {loggedUserRole && loggedUserRole !== "agent" && (
             <ReactSelect

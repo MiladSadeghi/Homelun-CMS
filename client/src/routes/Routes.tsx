@@ -68,14 +68,17 @@ function Routes() {
     const isUserProfileComplete = async () => {
       try {
         if (userRole === "agent") {
-          await axiosInstance.get("agent/profile");
-
-          dispatch(isProfileCompleted(true));
+          const { data } = await axiosInstance.get("agent/profile");
+          if (data.profileCompleted) {
+            dispatch(isProfileCompleted(true));
+          } else {
+            throw Error();
+          }
         }
       } catch (error: any) {
         dispatch(isProfileCompleted(false));
         navigate("/profile");
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message);
       }
     };
     isUserProfileComplete();

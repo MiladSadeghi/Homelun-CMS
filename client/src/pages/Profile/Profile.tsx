@@ -22,7 +22,7 @@ function Profile() {
       try {
         setIsLoading((prevState) => [...prevState, (prevState[0] = true)]);
         const {
-          data: { profile },
+          data: { profile, profileCompleted },
         } = await axiosInstance.get("agent/profile", {
           ...(agentSlug && { params: { agentSlug } }),
         });
@@ -34,15 +34,19 @@ function Profile() {
         setValue("social.instagram", profile?.social?.instagram);
         setValue("social.linkedin", profile?.social?.linkedin);
         setValue("social.twitter", profile?.social?.twitter);
-        dispatch(isProfileCompleted(true));
-        setIsLoading((prevState) => [...prevState, (prevState[0] = false)]);
+        if (profileCompleted) {
+          dispatch(isProfileCompleted(true));
+        } else {
+          dispatch(isProfileCompleted(false));
+        }
       } catch (error: any) {
         toast.error(
           error.response.status !== 422 && error.response.data.message
         );
         dispatch(isProfileCompleted(false));
-        setIsLoading((prevState) => [...prevState, (prevState[0] = false)]);
         navigate(-1);
+      } finally {
+        setIsLoading((prevState) => [...prevState, (prevState[0] = false)]);
       }
     };
     getAgentProfile();

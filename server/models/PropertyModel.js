@@ -70,7 +70,7 @@ const PropertySchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["rent", "buy"],
+      enum: ["rent", "sale"],
       default: "rent",
     },
     area: {

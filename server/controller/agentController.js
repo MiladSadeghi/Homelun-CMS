@@ -3,8 +3,8 @@ import PropertyModel from "../models/PropertyModel.js";
 
 export const getAgentProfile = async (req, res) => {
   const slug = req.query.agentSlug;
+  const { _id } = req;
   try {
-    const { _id } = req;
     const getAgentProfile = slug
       ? await AgentModel.findOne({ slug })
       : await AgentModel.findOne({ user: _id });
@@ -13,12 +13,13 @@ export const getAgentProfile = async (req, res) => {
         .status(404)
         .json({ error: true, message: "cant find agent profile" });
     const validationError = await getAgentProfile.validateSync();
-    if (validationError) {
-      return res
-        .status(422)
-        .json({ error: true, message: "please complete your profile!" });
-    }
-    return res.status(200).json({ error: false, profile: getAgentProfile });
+    return res.status(200).json({
+      error: false,
+      profile: getAgentProfile,
+      ...(validationError
+        ? { profileCompleted: false }
+        : { profileCompleted: true }),
+    });
   } catch (error) {
     return res
       .status(500)

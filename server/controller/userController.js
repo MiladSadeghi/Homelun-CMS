@@ -5,9 +5,8 @@ import UserToken from "../models/UserToken.js";
 
 export const createNewUser = async (req, res) => {
   const { name, email, password, role } = req.body;
-
   if (!name || !email || !password || !role)
-    res.status(400).json({
+    return res.status(400).json({
       error: true,
       message: "invalid data",
     });
@@ -21,17 +20,20 @@ export const createNewUser = async (req, res) => {
     password: hashedPassword,
     role,
   };
-
   try {
     const createdUser = await UserModel.create(data);
-    if (role === "agent")
+    if (role === "agent") {
       await AgentModel.create({
         user: createdUser._id,
+        name: createdUser.name,
         slug: createdUser.name.toLowerCase().replace(/ /g, "-"),
       });
-    return res
-      .status(200)
-      .json({ error: false, message: "User created", user: createdUser });
+    }
+    return res.status(200).json({
+      error: false,
+      message: "User created successfully",
+      user: createdUser,
+    });
   } catch (err) {
     if (err.code === 11000 || err.code === 11001) {
       return res.status(409).json({
@@ -39,7 +41,9 @@ export const createNewUser = async (req, res) => {
         message: `${Object.keys(err.keyValue).join("")} already exists`,
       });
     } else {
-      res.status(500).json({ error: true, message: "Internal Server Error" });
+      return res
+        .status(500)
+        .json({ error: true, message: "Internal Server Error" });
     }
   }
 };
@@ -127,11 +131,12 @@ export const updateUserWithId = async (req, res) => {
       new: true,
     });
     if (req.body.role === "agent") {
-      const findAgent = await AgentModel.find({ user: updatedUser._id });
+      const findAgent = await AgentModel.findOne({ user: updatedUser._id });
       if (!findAgent) {
         await AgentModel.create({
           user: updatedUser._id,
           slug: updatedUser.name.toLowerCase().replace(/ /g, "-"),
+          name: updatedUser.name,
         });
       }
     }

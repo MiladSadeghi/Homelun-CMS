@@ -37,14 +37,16 @@ export const isSuperAdmin = (req, res, next) => {
   const token = authHeader.split(" ")[1];
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY, (err, decoded) => {
     if (err) {
-      if (err.message === "jwt expired")
+      if (err.message === "jwt expired") {
         return res.status(401).json({ error: true, message: "invalid token" });
+      }
       return res.status(403).json({ error: true, message: "invalid token" });
     }
-    if (decoded.role !== "super_admin")
+    if (decoded.role !== "super_admin") {
       return res
         .status(403)
         .json({ error: true, message: "You don't have permission" });
+    }
     req._id = decoded._id;
     next();
   });

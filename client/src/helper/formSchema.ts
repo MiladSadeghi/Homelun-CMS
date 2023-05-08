@@ -28,13 +28,16 @@ export const createUserForm: ZodType<TCreateUser> = z.object({
 export const createPropertyForm: ZodType<TPropertyForm> = z.object({
   address: z.string().nonempty("address is required"),
   furnished: z.enum(["true", "false"]),
-  status: z.enum(["rent", "buy"]),
+  status: z.enum(["rent", "sale"]),
   agent: z.string(),
   exclusivity: z.string().nonempty("exclusivity is required"),
   price: z.string().nonempty("price is required"),
   offPercent: z.number().min(0).max(100),
   about: z.string().nonempty("about is required"),
   map: z.string().nonempty("map is required"),
+  area: z.number(),
+  bedrooms: z.number(),
+  bathrooms: z.number(),
 });
 
 export const editProfileForm: ZodType<TAgentForm> = z.object({

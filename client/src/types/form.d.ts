@@ -17,7 +17,7 @@ export type TPropertyForm = {
   offPercent?: number;
   about: string;
   map: string;
-  status: "rent" | "buy";
+  status: "rent" | "sale";
   agent?: string;
   area: number;
   bedrooms: number;

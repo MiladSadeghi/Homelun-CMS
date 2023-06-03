@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { TUser } from "../../types/user";
+import { TAgent, TUser } from "../../types/user";
 
 const initialState: TUser = {
   isAuthenticated: false,
@@ -7,6 +7,7 @@ const initialState: TUser = {
   name: null,
   role: null,
   profileCompleted: false,
+  agentProfile: null,
 };
 
 const userSlice = createSlice({
@@ -22,8 +23,15 @@ const userSlice = createSlice({
     setToken: (state, { payload }) => {
       state.accessToken = payload;
     },
-    isProfileCompleted: (state, { payload }: { payload: boolean }) => {
-      state.profileCompleted = payload;
+    isProfileCompleted: (
+      state,
+      {
+        payload,
+      }: { payload: { status: boolean; id?: string; agentProfile?: TAgent } }
+    ) => {
+      state.profileCompleted = payload.status;
+      state.id = payload.id;
+      state.agentProfile = payload.agentProfile;
     },
     userLogout: () => {
       localStorage.removeItem("kq_c");

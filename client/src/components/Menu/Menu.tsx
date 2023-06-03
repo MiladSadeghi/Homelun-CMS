@@ -33,28 +33,30 @@ function Menu() {
 
   return (
     <Wrapper>
-      <div tw="w-full">
-        <div tw="py-9 text-center w-full">
-          <Logo color="dark" />
+      <div tw="flex flex-col justify-between items-center h-screen fixed shadow-lg bg-white w-[320px]">
+        <div tw="w-full">
+          <div tw="py-9 text-center w-full">
+            <Logo color="dark" />
+          </div>
+          <div tw="w-full flex flex-col justify-between">
+            {menuItemByRole(userRole).map((item: TRoleMenuItem) => (
+              <Item key={item.name} to={item.link}>
+                <item.icon size={20} />
+                <ItemContent>{item.name}</ItemContent>
+              </Item>
+            ))}
+          </div>
         </div>
-        <div tw="w-full flex flex-col justify-between">
-          {menuItemByRole(userRole).map((item: TRoleMenuItem) => (
-            <Item key={item.name} to={item.link}>
-              <item.icon size={20} />
-              <ItemContent>{item.name}</ItemContent>
-            </Item>
-          ))}
-        </div>
+        <Button onClick={handleLogout} disabled={isLoading}>
+          <BiLogOut size={20} />
+          <ItemContent>Logout</ItemContent>
+        </Button>
       </div>
-      <Button onClick={handleLogout} disabled={isLoading}>
-        <BiLogOut size={20} />
-        <ItemContent>Logout</ItemContent>
-      </Button>
     </Wrapper>
   );
 }
 
-const Wrapper = tw.div`flex flex-col w-[18%] h-screen items-center shadow-lg justify-between`;
+const Wrapper = tw.div`col-span-2`;
 const Item = styled(NavLink)`
   ${tw`py-4 px-3 mb-3 font-bold w-full items-center flex`} &.active {
     ${tw`bg-[#efe9ff] text-purple-800 font-bold relative before:(absolute left-0 top-0 h-full w-[2px] bg-purple-800)`}

@@ -22,7 +22,7 @@ export const createProperty = async (req, res) => {
 
   if (
     !address ||
-    !furnished ||
+    typeof furnished !== "boolean" ||
     !exclusivity ||
     !price ||
     !about ||
@@ -87,17 +87,17 @@ export const createProperty = async (req, res) => {
 
 export const getProperties = async (req, res) => {
   const { propertyId, agentId } = req.query;
-
+  console.log(propertyId, agentId);
   try {
     const foundedProperty = propertyId
       ? await PropertyModel.findOne({
           _id: new mongoose.Types.ObjectId(propertyId),
-          ...(agentId && { user: new mongoose.Types.ObjectId(agentId) }),
+          ...(agentId && { agent: new mongoose.Types.ObjectId(agentId) }),
         }).populate({
           path: "agent",
         })
       : await PropertyModel.find({
-          ...(agentId && { user: new mongoose.Types.ObjectId(agentId) }),
+          ...(agentId && { agent: new mongoose.Types.ObjectId(agentId) }),
         }).populate({
           path: "agent",
         });
@@ -111,7 +111,7 @@ export const getProperties = async (req, res) => {
     }
     return res.status(200).json({ error: false, properties: foundedProperty });
   } catch (error) {
-    res.status(500).json({ error: true, message: error.message });
+    return res.status(500).json({ error: true, message: error.message });
   }
 };
 

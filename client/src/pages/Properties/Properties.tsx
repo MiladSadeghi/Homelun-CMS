@@ -30,12 +30,15 @@ function Properties() {
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [searchProperty, setSearchProperty] = useState<TProperty[]>();
   const [isStatusLoading, isSetStatusLoading] = useState<boolean>(false);
+  const agentId = useSelector((state: RootState) => state.userSlice.id);
 
   useEffect(() => {
     const getProperties = async () => {
       try {
         setIsLoading(true);
-        const { data } = await axiosInstance.get("property");
+        const { data } = await axiosInstance.get("property", {
+          params: { ...(isAgent && { agentId }) },
+        });
         dispatch(setProperties(data.properties));
         setIsLoading(false);
       } catch (error: any) {
@@ -106,16 +109,16 @@ function Properties() {
 
   return (
     <Wrapper>
-      <nav tw="grid-cols-12 gap-4 grid bg-white py-4 px-8">
+      <nav tw="grid-cols-12 gap-4 grid bg-white py-4 px-8 sticky top-0">
         <Link
           to="/properties/add"
-          tw="py-2 px-3 rounded-xl bg-cyan-600 text-white text-sm flex items-center font-semibold col-span-1 w-fit"
+          tw="py-2 px-3 rounded-xl bg-cyan-600 text-white text-sm flex items-center font-semibold col-span-2"
         >
           ADD NEW
           <BiPlus size={18} tw="ml-1" />
         </Link>
         <input
-          tw="h-full rounded-lg w-full col-span-9 drop-shadow-lg bg-purple-800 text-white px-3"
+          tw="h-full rounded-lg w-full col-span-8 drop-shadow-lg bg-purple-800 text-white px-3"
           value={search}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearch(e.target.value)
@@ -225,7 +228,7 @@ function Properties() {
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative`;
+const Wrapper = tw.div`col-span-10 bg-[#F4F7FE] h-screen relative overflow-y-auto`;
 
 const Thead = tw.thead`border-[#F4F7FE] border-[5px] border-solid`;
 const Th = tw.th`text-left py-3 bg-white px-1 first-of-type:(rounded-tl-2xl rounded-bl-2xl) last-of-type:(rounded-tr-2xl rounded-br-2xl)`;

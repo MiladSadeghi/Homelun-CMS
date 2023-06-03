@@ -99,16 +99,16 @@ function Users() {
 
   return (
     <Wrapper>
-      <nav tw="grid-cols-12 gap-4 grid bg-white py-4 px-8 items-center">
+      <nav tw="grid grid-cols-12 gap-4 bg-white py-4 px-8 items-center">
         <Link
           to="/users/add"
-          tw="py-2 px-3 rounded-xl bg-cyan-600 text-white text-sm flex items-center font-semibold col-span-1 w-fit"
+          tw="px-3 h-full rounded-xl bg-cyan-600 text-white text-sm flex items-center font-semibold col-span-2 w-full"
         >
           ADD NEW
           <BiPlus size={18} tw="ml-1" />
         </Link>
         <input
-          tw="rounded-lg w-full col-span-9 drop-shadow-lg bg-purple-800 text-white px-3 h-9"
+          tw="rounded-lg w-full col-span-8 drop-shadow-lg bg-purple-800 text-white px-3 h-9"
           value={search}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setSearch(e.target.value)
@@ -197,7 +197,7 @@ function Users() {
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative`;
+const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative col-span-10`;
 
 const Thead = tw.thead`border-[#F4F7FE] border-[5px] border-solid`;
 const Tr = tw.tr`border-[#F4F7FE] border-[5px] border-solid`;

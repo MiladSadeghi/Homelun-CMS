@@ -6,51 +6,20 @@ import { useForm } from "react-hook-form";
 import { editProfileForm } from "../../helper/formSchema";
 import { TAgentForm } from "../../types/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { isProfileCompleted } from "../../feature/user/userSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import { BiLeftArrowAlt } from "react-icons/bi";
+import { RootState } from "../../feature/store";
 
 function Profile() {
   const [isLoading, setIsLoading] = useState<boolean[]>([false, false]);
   const dispatch = useDispatch();
   const { agentSlug } = useParams();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const getAgentProfile = async () => {
-      try {
-        setIsLoading((prevState) => [...prevState, (prevState[0] = true)]);
-        const {
-          data: { profile, profileCompleted },
-        } = await axiosInstance.get("agent/profile", {
-          ...(agentSlug && { params: { agentSlug } }),
-        });
-        setValue("about", profile.about);
-        setValue("cover", profile.cover);
-        setValue("field", profile.field);
-        setValue("name", profile.name);
-        setValue("phoneNumber", profile.phoneNumber);
-        setValue("social.instagram", profile?.social?.instagram);
-        setValue("social.linkedin", profile?.social?.linkedin);
-        setValue("social.twitter", profile?.social?.twitter);
-        if (profileCompleted) {
-          dispatch(isProfileCompleted(true));
-        } else {
-          dispatch(isProfileCompleted(false));
-        }
-      } catch (error: any) {
-        toast.error(
-          error.response.status !== 422 && error.response.data.message
-        );
-        dispatch(isProfileCompleted(false));
-        navigate(-1);
-      } finally {
-        setIsLoading((prevState) => [...prevState, (prevState[0] = false)]);
-      }
-    };
-    getAgentProfile();
-  }, []);
+  const profile = useSelector(
+    (state: RootState) => state.userSlice.agentProfile
+  );
 
   const {
     register,
@@ -62,19 +31,29 @@ function Profile() {
     resolver: zodResolver(editProfileForm),
   });
 
+  useEffect(() => {
+    setValue("about", profile!.about);
+    setValue("cover", profile!.cover);
+    setValue("field", profile!.field);
+    setValue("name", profile!.name);
+    setValue("phoneNumber", profile!.phoneNumber);
+    setValue("social.instagram", profile?.social?.instagram);
+    setValue("social.linkedin", profile?.social?.linkedin);
+    setValue("social.twitter", profile?.social?.twitter);
+  }, []);
+
   const updateProfile = async () => {
     try {
-      setIsLoading((prevState) => [...prevState, (prevState[1] = true)]);
       const { data } = await axiosInstance.post("agent/profile", {
         ...getValues(),
         ...(agentSlug && { agentSlug }),
       });
-      dispatch(isProfileCompleted(true));
+      dispatch(isProfileCompleted({ status: false }));
       toast.success(data.message);
       setIsLoading((prevState) => [...prevState, (prevState[1] = false)]);
     } catch (error: any) {
       toast.error(error.response.data.message);
-      dispatch(isProfileCompleted(false));
+      dispatch(isProfileCompleted({ status: false }));
       setIsLoading((prevState) => [...prevState, (prevState[1] = false)]);
     }
   };
@@ -82,7 +61,7 @@ function Profile() {
   if (isLoading[0]) return <>Loading...</>;
   return (
     <Wrapper>
-      <nav tw="bg-white py-4 px-8 shadow-sm flex items-center">
+      <nav tw="flex gap-4 bg-white py-4 px-8 items-center">
         <BiLeftArrowAlt
           size={24}
           onClick={() => navigate(-1)}
@@ -128,7 +107,7 @@ function Profile() {
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen`;
+const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative col-span-10`;
 const Input = tw.input`py-2 px-3 rounded-lg border-gray-300 border-solid border h-fit`;
 const Textarea = tw.textarea`py-2 px-3 rounded-lg border-gray-300 border-solid border outline-none resize-none`;
 const Button = tw.button`rounded-md !bg-teal-700 text-white text-sm flex items-center font-semibold py-2 px-2 col-span-1 w-full h-fit justify-self-end justify-center col-start-3 row-start-4 disabled:opacity-60`;

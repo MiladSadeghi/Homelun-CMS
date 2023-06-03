@@ -98,7 +98,7 @@ function Agents() {
 
   return (
     <Wrapper>
-      <nav tw="grid-cols-12 gap-4 grid bg-white py-4 px-8 items-center">
+      <nav tw="grid grid-cols-12 gap-4 bg-white py-4 px-8 items-center">
         <h3 tw="font-bold text-xl col-span-1 w-fit">Agents</h3>
         <input
           tw="rounded-lg w-full col-span-9 drop-shadow-lg bg-purple-800 text-white px-3 h-9"
@@ -119,7 +119,7 @@ function Agents() {
           </Button>
         )}
       </nav>
-      <div tw="p-8">
+      <div tw="p-8 col-span-12">
         <table tw="w-full">
           <Thead>
             <Tr>
@@ -188,7 +188,7 @@ function Agents() {
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative`;
+const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative col-span-10`;
 
 const Thead = tw.thead`border-[#F4F7FE] border-[5px] border-solid`;
 const Th = tw.th`text-left py-3 bg-white px-1 first-of-type:(rounded-tl-2xl rounded-bl-2xl) last-of-type:(rounded-tr-2xl rounded-br-2xl)`;

@@ -7,11 +7,11 @@ function PrivateRoute() {
   return (
     <Wrapper>
       <Menu />
-      <Outlet />
+      <Outlet tw="col-span-9" />
     </Wrapper>
   );
 }
 
-const Wrapper = tw.div`flex`;
+const Wrapper = tw.div`grid grid-cols-12`;
 
 export default PrivateRoute;

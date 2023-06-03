@@ -97,8 +97,8 @@ const AmenitiesModal = styled.div`
 `;
 const AmenitiesHeader = tw.div`py-3 px-7 border-b flex justify-between items-center`;
 
-const AmenitiesBody = tw.div`p-2`;
-const Button = tw.button`rounded-md !bg-teal-600 text-white text-sm flex items-center font-semibold h-full  py-2 px-2`;
+const AmenitiesBody = tw.div`p-2 overflow-y-auto h-[92%]`;
+const Button = tw.button`rounded-md !bg-teal-600 text-white text-sm flex items-center font-semibold  py-2 px-2`;
 const AmenitiesInput = tw.input`col-span-4 py-2 px-2 rounded-md border border-gray-300 border-solid`;
 
 export default PropertyAmenities;

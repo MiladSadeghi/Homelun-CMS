@@ -111,7 +111,7 @@ function User() {
 
   return (
     <Wrapper>
-      <nav tw="bg-white py-4 px-8 shadow-sm flex items-center">
+      <nav tw="flex grid-cols-12 gap-4 bg-white py-4 px-8 items-center">
         <BiLeftArrowAlt
           size={24}
           onClick={() => navigate(-1)}
@@ -179,7 +179,7 @@ function User() {
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen flex flex-col relative`;
+const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative col-span-10`;
 
 const Input = tw.input`py-2 px-3 rounded-lg`;
 

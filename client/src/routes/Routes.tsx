@@ -70,13 +70,19 @@ function Routes() {
         if (userRole === "agent") {
           const { data } = await axiosInstance.get("agent/profile");
           if (data.profileCompleted) {
-            dispatch(isProfileCompleted(true));
+            dispatch(
+              isProfileCompleted({
+                status: true,
+                id: data.profile._id,
+                agentProfile: data.profile,
+              })
+            );
           } else {
             throw Error();
           }
         }
       } catch (error: any) {
-        dispatch(isProfileCompleted(false));
+        dispatch(isProfileCompleted({ status: false }));
         navigate("/profile");
         toast.error(error?.response?.data?.message);
       }

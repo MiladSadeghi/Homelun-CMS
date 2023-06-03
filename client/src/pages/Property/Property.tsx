@@ -180,7 +180,7 @@ function Property() {
 
   return (
     <Wrapper>
-      <nav tw="bg-white py-4 px-8 shadow-sm flex items-center">
+      <nav tw="gap-4 bg-white py-4 px-8 sticky top-0 flex items-center">
         <BiLeftArrowAlt
           size={24}
           onClick={() => navigate(-1)}
@@ -325,7 +325,7 @@ function Property() {
   );
 }
 
-const Wrapper = tw.div`w-full bg-[#F4F7FE] h-screen relative`;
+const Wrapper = tw.div`col-span-10 bg-[#F4F7FE] h-screen relative overflow-y-auto`;
 
 const Input = tw.input`col-span-4 py-2 px-2 rounded-md border border-gray-300 border-solid`;
 

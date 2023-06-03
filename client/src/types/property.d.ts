@@ -30,5 +30,8 @@ export type TProperty = {
   updatedAt: Date;
   status: boolean;
   publish: boolean;
-  status: "rent" | "buy";
+  status: "rent" | "sale";
+  area: number;
+  bedrooms: number;
+  bathrooms: number;
 };

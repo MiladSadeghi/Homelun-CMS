@@ -4,6 +4,8 @@ export type TUser = {
   name: string | null;
   role: "super_admin" | "admin" | "agent" | null;
   profileCompleted?: boolean;
+  id?: string | null;
+  agentProfile?: TAgent | null;
 };
 
 export type TUsers = Pick<TUser, "name" | "role"> & {
@@ -26,4 +28,9 @@ export type TAgent = {
   cover: string;
   publish: boolean;
   slug: string;
+  social: {
+    instagram: string;
+    linkedin: string;
+    twitter: string;
+  };
 };

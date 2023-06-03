@@ -128,7 +128,7 @@ function PropertyGallery({ toggle, tab, inputs }: any) {
   );
 }
 
-const Button = tw.button`rounded-md !bg-teal-600 text-white text-sm flex items-center font-semibold h-full  py-2 px-2`;
+const Button = tw.button`rounded-md !bg-teal-600 text-white text-sm flex items-center font-semibold py-2 px-2`;
 const GalleryModal = styled.div`
   ${tw`bg-slate-600 p-8 bg-opacity-60 absolute left-0 top-0 w-full h-full`} ${({
     show,
@@ -145,7 +145,7 @@ const GalleryTab = styled.h3`
     active: boolean;
   }) => active && tw`border-b bg-purple-900 text-white`}
 `;
-const GalleryBody = tw.div`p-7`;
+const GalleryBody = tw.div`p-7 overflow-y-auto h-[87%]`;
 const GalleryInput = styled.input`
   ${tw`col-span-4 py-2 px-2 rounded-md border border-gray-300 border-solid`}
   ${({ error = false }: { error?: boolean }) =>

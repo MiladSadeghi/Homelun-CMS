@@ -14,7 +14,7 @@ const PropertySchema = new mongoose.Schema(
       required: [true, "exclusivity is empty"],
     },
     price: {
-      type: String,
+      type: Number,
       required: [true, "the price is required"],
     },
     offPercent: {
@@ -71,7 +71,7 @@ const PropertySchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["rent", "sale"],
-      default: "rent",
+      required: [true, "check status"],
     },
     area: {
       type: Number,

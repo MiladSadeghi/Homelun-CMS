@@ -18,6 +18,7 @@ export const createProperty = async (req, res) => {
     area,
     bedrooms,
     bathrooms,
+    status,
   } = req.body;
 
   if (
@@ -31,7 +32,8 @@ export const createProperty = async (req, res) => {
     !gallery ||
     !area ||
     !bedrooms ||
-    !bathrooms
+    !bathrooms ||
+    !status
   ) {
     return res.status(400).json({
       error: true,
@@ -53,6 +55,7 @@ export const createProperty = async (req, res) => {
     slug: address.toLowerCase().replace(/[,\s]+/g, "-"),
     bedrooms,
     bathrooms,
+    status,
   };
 
   try {
@@ -87,7 +90,6 @@ export const createProperty = async (req, res) => {
 
 export const getProperties = async (req, res) => {
   const { propertyId, agentId } = req.query;
-  console.log(propertyId, agentId);
   try {
     const foundedProperty = propertyId
       ? await PropertyModel.findOne({

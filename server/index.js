@@ -14,6 +14,7 @@ import * as fs from "fs";
 import moment from "moment-timezone";
 import propertyRoutes from "./routes/propertyRoutes.js";
 import agentRoutes from "./routes/agentRoutes.js";
+import contactRouter from "./routes/contactRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,6 +49,7 @@ app.use("/auth", authRoutes);
 app.use("/user", userRouter);
 app.use("/property", propertyRoutes);
 app.use("/agent", agentRoutes);
+app.use("/contact", contactRouter);
 
 const PORT = process.env.PORT || 6321;
 mongoose

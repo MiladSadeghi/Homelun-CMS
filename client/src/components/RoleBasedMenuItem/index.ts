@@ -1,8 +1,7 @@
 import { TRole, TRoleMenuItem } from "../../types/role";
-import { FiHome, FiUsers } from "react-icons/fi";
+import { FiUsers } from "react-icons/fi";
 import { MdOutlinePerson4, MdInsights, MdSpaceDashboard } from "react-icons/md";
-import { ImUsers } from "react-icons/im";
-import { RiProfileLine, RiDashboardLine } from "react-icons/ri";
+import { RiProfileLine, RiDashboardLine, RiContactsLine } from "react-icons/ri";
 import { BiHomeHeart } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../feature/store";
@@ -18,6 +17,7 @@ const menuItemByRole = (role: TRole): TRoleMenuItem[] => {
     { name: "Insight", link: "/insight", icon: MdInsights },
     { name: "Properties", link: "/properties", icon: BiHomeHeart },
     { name: "Users", link: "/users", icon: FiUsers },
+    { name: "Contact Us", link: "/contact", icon: RiContactsLine },
   ];
 
   const AdminMenuItem: TRoleMenuItem[] = [
@@ -25,6 +25,7 @@ const menuItemByRole = (role: TRole): TRoleMenuItem[] => {
     { name: "Agents", link: "/agents", icon: MdOutlinePerson4 },
     { name: "Insight", link: "/insight", icon: MdInsights },
     { name: "Properties", link: "/properties", icon: BiHomeHeart },
+    { name: "Contact Us", link: "/contact", icon: RiContactsLine },
   ];
 
   const AgentMenuItem = (): TRoleMenuItem[] => {

@@ -16,7 +16,7 @@ export type TProperty = {
   address: string;
   furnished: boolean;
   exclusivity: string[];
-  price: string;
+  price: number;
   offPercent: number;
   about: string;
   amenities: TAmenities[];

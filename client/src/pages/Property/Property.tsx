@@ -275,12 +275,18 @@ function Property() {
             placeholder="exclusivity (split with comma)"
             {...register("exclusivity")}
           />
-          <Input placeholder="price" {...register("price")} />
+          <Input
+            type="number"
+            step="1"
+            placeholder="price"
+            {...register("price", { valueAsNumber: true })}
+          />
           <Input
             type="number"
             min={0}
             max={100}
             defaultValue=""
+            step="0.1"
             placeholder="off percent (leave it if you don't need it)"
             {...register("offPercent", { valueAsNumber: true })}
           />

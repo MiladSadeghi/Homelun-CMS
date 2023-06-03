@@ -13,7 +13,7 @@ export type TPropertyForm = {
   address: string;
   furnished: "true" | "false";
   exclusivity: string;
-  price: string;
+  price: number;
   offPercent?: number;
   about: string;
   map: string;

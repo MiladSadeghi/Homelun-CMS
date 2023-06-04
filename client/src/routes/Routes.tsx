@@ -25,6 +25,7 @@ import axiosInstance from "../services/api";
 import { toast } from "react-toastify";
 import Property from "../pages/Property";
 import Contact from "../pages/Contact Us";
+import TourRequests from "../pages/TourRequests/TourRequests";
 
 function Routes() {
   const location = useLocation();
@@ -107,6 +108,7 @@ function Routes() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/properties/:propertyId" element={<Property />} />
+          <Route path="/tour" element={<TourRequests />} />
 
           {/* these routes are only available for the super admins and admin */}
           {userRole && userRole === ("super_admin" || "admin") && (

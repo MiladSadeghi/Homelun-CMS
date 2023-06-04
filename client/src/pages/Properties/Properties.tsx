@@ -130,7 +130,7 @@ function Properties() {
               changePublishProperty(selectedProperty.publish ? false : true)
             }
             disabled={isStatusLoading}
-            isPublish={selectedProperty.publish}
+            $isPublish={selectedProperty.publish}
           >
             {!selectedProperty.publish ? "Publish?" : "Un publish?"}
           </Button>
@@ -239,12 +239,10 @@ const Badge = tw.span`border border-solid rounded-lg  px-2 py-[2px] text-xs font
 const Edit = tw(
   Link
 )` py-2 px-4 bg-blue-200 border border-solid border-blue-700 text-blue-700 text-sm font-bold rounded-xl flex items-center justify-center`;
-const Button = styled.button`
+const Button = styled.button<{ $isPublish: boolean }>`
   ${tw`py-2 px-3 rounded-xl  text-white text-sm flex items-center font-semibold col-span-2 disabled:opacity-60`} ${({
-    isPublish,
-  }: {
-    isPublish: boolean;
-  }) => (isPublish ? tw`bg-yellow-600` : tw`bg-green-700`)}
+    $isPublish,
+  }) => ($isPublish ? tw`bg-yellow-600` : tw`bg-green-700`)}
 `;
 
 export default Properties;

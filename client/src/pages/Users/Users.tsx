@@ -120,7 +120,7 @@ function Users() {
               changeDisabledStatus(selectedUser.disabled ? false : true)
             }
             disabled={disableLoading}
-            isDisabled={selectedUser.disabled}
+            $isDisabled={selectedUser.disabled}
           >
             {!selectedUser.disabled ? "Disable?" : "Enable?"}
           </Button>
@@ -206,12 +206,10 @@ const Td = tw.td`py-2 px-1 bg-white first-of-type:(rounded-tl-2xl rounded-bl-2xl
 
 const Badge = tw.span`border border-solid rounded-lg  px-2 py-[2px] text-xs font-bold`;
 
-const Button = styled.button`
+const Button = styled.button<{ $isDisabled: boolean }>`
   ${tw`py-2 px-3 rounded-xl  text-white text-sm flex items-center font-semibold col-span-2 disabled:opacity-60`} ${({
-    isDisabled,
-  }: {
-    isDisabled: boolean;
-  }) => (isDisabled ? tw`bg-yellow-600` : tw`bg-green-700`)}
+    $isDisabled,
+  }) => ($isDisabled ? tw`bg-yellow-600` : tw`bg-green-700`)}
 `;
 
 const Edit = tw(

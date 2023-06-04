@@ -32,30 +32,46 @@ function Profile() {
   });
 
   useEffect(() => {
-    setValue("about", profile!.about);
-    setValue("cover", profile!.cover);
-    setValue("field", profile!.field);
-    setValue("name", profile!.name);
-    setValue("phoneNumber", profile!.phoneNumber);
-    setValue("social.instagram", profile?.social?.instagram);
-    setValue("social.linkedin", profile?.social?.linkedin);
-    setValue("social.twitter", profile?.social?.twitter);
+    if (!profile) {
+      setIsLoading((prevState) => [...prevState, (prevState[1] = true)]);
+      axiosInstance
+        .get("agent/profile", { params: { agentSlug } })
+        .then((response) => {
+          fillForm(response.data.profile);
+        })
+        .catch((err) => console.log(err))
+        .finally(() =>
+          setIsLoading((prevState) => [...prevState, (prevState[1] = false)])
+        );
+    }
   }, []);
 
   const updateProfile = async () => {
     try {
+      setIsLoading((prevState) => [...prevState, (prevState[1] = true)]);
       const { data } = await axiosInstance.post("agent/profile", {
         ...getValues(),
         ...(agentSlug && { agentSlug }),
       });
       dispatch(isProfileCompleted({ status: false }));
       toast.success(data.message);
-      setIsLoading((prevState) => [...prevState, (prevState[1] = false)]);
     } catch (error: any) {
       toast.error(error.response.data.message);
       dispatch(isProfileCompleted({ status: false }));
+    } finally {
       setIsLoading((prevState) => [...prevState, (prevState[1] = false)]);
     }
+  };
+
+  const fillForm = (data: TAgentForm) => {
+    setValue("about", data!.about);
+    setValue("cover", data!.cover);
+    setValue("field", data!.field);
+    setValue("name", data!.name);
+    setValue("phoneNumber", data!.phoneNumber);
+    setValue("social.instagram", data?.social?.instagram);
+    setValue("social.linkedin", data?.social?.linkedin);
+    setValue("social.twitter", data?.social?.twitter);
   };
 
   if (isLoading[0]) return <>Loading...</>;

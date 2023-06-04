@@ -102,54 +102,35 @@ function Routes() {
           path="/"
           element={isUserAuthenticated ? <PrivateRoute /> : <Login />}
         >
-          {userRole && userRole === "super_admin" && (
+          {/* Public Routes */}
+          <Route path="/insight" element={<Insight />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/properties" element={<Properties />} />
+          <Route path="/properties/:propertyId" element={<Property />} />
+
+          {/* these routes are only available for the super admins and admin */}
+          {userRole && userRole === ("super_admin" || "admin") && (
             <>
-              <Route path="/" element={<Dashboard />} />
               <Route path="/agents" element={<Agents />} />
               <Route path="/agents/:agentSlug" element={<Profile />} />
-              <Route path="/insight" element={<Insight />} />
-              <Route path="/properties" element={<Properties />} />
               <Route path="/users" element={<Users />} />
-              <Route path="/users/add" element={<User />} />
               <Route path="/users/:userId" element={<User />} />
-              <Route path="/properties/add" element={<Property />} />
-              <Route path="/properties/:propertyId" element={<Property />} />
               <Route path="/contact" element={<Contact />} />
             </>
           )}
-          {userRole && userRole === "admin" && (
+
+          {/* these routes are only available for the super admins */}
+          {userRole && userRole === "super_admin" && (
             <>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/agents" element={<Agents />} />
-              <Route path="/insight" element={<Insight />} />
-              <Route path="/properties" element={<Properties />} />
-              <Route path="/properties/:propertyId" element={<Property />} />
-              <Route path="/contact/" element={<Contact />} />
+              <Route path="/users/add" element={<User />} />
+              <Route path="/properties/add" element={<Property />} />
             </>
           )}
+
+          {/* these routes are only available for the admins */}
           {userRole && userRole === "agent" && (
             <>
-              <Route
-                path="/"
-                element={isAgentProfileComplete && <Dashboard />}
-              />
               <Route path="/profile" element={<Profile />} />
-              <Route
-                path="/insight"
-                element={isAgentProfileComplete && <Insight />}
-              />
-              <Route
-                path="/properties"
-                element={isAgentProfileComplete && <Properties />}
-              />
-              <Route
-                path="/properties/add"
-                element={isAgentProfileComplete && <Property />}
-              />
-              <Route
-                path="/properties/:propertyId"
-                element={isAgentProfileComplete && <Property />}
-              />
             </>
           )}
         </Route>

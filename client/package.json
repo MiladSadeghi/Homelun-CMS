@@ -1,5 +1,5 @@
 {
-	"name": "Homelun-admin",
+	"name": "homelun-cms",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -10,14 +10,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/miladsadeghi/homelun-admin.git"
+		"url": "git+https://github.com/miladsadeghi/homelun-CMS.git"
 	},
 	"author": "MiladSadeghi",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/miladsadeghi/homelun-admin/issues"
+		"url": "https://github.com/miladsadeghi/homelun-CMS/issues"
 	},
-	"homepage": "https://github.com/miladsadeghi/homelun-admin#readme",
+	"homepage": "https://github.com/miladsadeghi/homelun-CMS#readme",
 	"dependencies": {
 		"@hookform/resolvers": "^3.1.0",
 		"@reduxjs/toolkit": "^1.9.3",
@@ -32,6 +32,7 @@
 		"react-router-dom": "^6.10.0",
 		"react-select": "^5.7.2",
 		"react-toastify": "^9.1.2",
+		"recharts": "^2.6.2",
 		"styled-components": "^6.0.0-rc.1",
 		"uuid": "^9.0.0",
 		"vite-tsconfig-paths": "^4.2.0",
@@ -42,7 +43,7 @@
 		"@types/react-dom": "^18.0.11",
 		"@types/styled-components": "^5.1.26",
 		"@types/uuid": "^9.0.1",
-		"@vitejs/plugin-react": "^3.1.0",
+		"@vitejs/plugin-react": "^4.0.0",
 		"autoprefixer": "^10.4.14",
 		"babel-plugin-macros": "^3.1.0",
 		"babel-plugin-styled-components": "^2.1.1",

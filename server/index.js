@@ -16,6 +16,7 @@ import propertyRoutes from "./routes/propertyRoutes.js";
 import agentRoutes from "./routes/agentRoutes.js";
 import contactRouter from "./routes/contactRoutes.js";
 import tourRouter from "./routes/tourRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,7 +43,6 @@ app.use(morgan("myformat", "combined", { stream: accessLogStream }));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors(corsOptions));
-app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
 app.get("/", (req, res) => res.send("Its Work!"));
 
@@ -52,6 +52,7 @@ app.use("/property", propertyRoutes);
 app.use("/agent", agentRoutes);
 app.use("/contact", contactRouter);
 app.use("/tour", tourRouter);
+app.use("/dashboard", dashboardRoutes);
 
 const PORT = process.env.PORT || 6321;
 mongoose

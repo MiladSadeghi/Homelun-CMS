@@ -5,7 +5,7 @@ import tw from "twin.macro";
 
 function Loader({ isLoading }: { isLoading: boolean }) {
   return (
-    <Wrapper isLoading={isLoading}>
+    <Wrapper $isLoading={isLoading}>
       <TailSpin
         radius="0"
         width={100}
@@ -17,12 +17,10 @@ function Loader({ isLoading }: { isLoading: boolean }) {
   );
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $isLoading: boolean }>`
   ${tw`absolute left-0 top-0 h-screen w-full bg-white  flex items-center justify-center duration-300 transition-all`} ${({
-    isLoading,
-  }: {
-    isLoading: boolean;
-  }) => (isLoading ? tw`bg-opacity-90 visible ` : tw`bg-opacity-0 invisible `)}
+    $isLoading,
+  }) => ($isLoading ? tw`bg-opacity-90 visible ` : tw`bg-opacity-0 invisible `)}
 `;
 
 export default Loader;

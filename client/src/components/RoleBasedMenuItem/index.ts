@@ -1,10 +1,6 @@
 import { TRole, TRoleMenuItem } from "../../types/role";
 import { FiUsers } from "react-icons/fi";
-import {
-  MdOutlinePerson4,
-  MdInsights,
-  MdOutlineLocalSee,
-} from "react-icons/md";
+import { MdOutlinePerson4, MdOutlineLocalSee } from "react-icons/md";
 import { RiProfileLine, RiDashboardLine, RiContactsLine } from "react-icons/ri";
 import { BiHomeHeart } from "react-icons/bi";
 import { useSelector } from "react-redux";
@@ -18,7 +14,6 @@ const menuItemByRole = (role: TRole): TRoleMenuItem[] => {
   const SuperAdminMenuItem: TRoleMenuItem[] = [
     { name: "Dashboard", link: "/", icon: RiDashboardLine },
     { name: "Agents", link: "/agents", icon: MdOutlinePerson4 },
-    { name: "Insight", link: "/insight", icon: MdInsights },
     { name: "Properties", link: "/properties", icon: BiHomeHeart },
     { name: "Users", link: "/users", icon: FiUsers },
     { name: "Contact Us", link: "/contact", icon: RiContactsLine },
@@ -28,7 +23,6 @@ const menuItemByRole = (role: TRole): TRoleMenuItem[] => {
   const AdminMenuItem: TRoleMenuItem[] = [
     { name: "Dashboard", link: "/", icon: RiDashboardLine },
     { name: "Agents", link: "/agents", icon: MdOutlinePerson4 },
-    { name: "Insight", link: "/insight", icon: MdInsights },
     { name: "Properties", link: "/properties", icon: BiHomeHeart },
     { name: "Contact Us", link: "/contact", icon: RiContactsLine },
     { name: "Tour Request", link: "/tour", icon: MdOutlineLocalSee },
@@ -39,7 +33,6 @@ const menuItemByRole = (role: TRole): TRoleMenuItem[] => {
       ? [
           { name: "Dashboard", link: "/", icon: RiDashboardLine },
           { name: "Profile", link: "/profile", icon: RiProfileLine },
-          { name: "Insight", link: "/insight", icon: MdInsights },
           { name: "Properties", link: "/properties", icon: BiHomeHeart },
           { name: "Tour Request", link: "/tour", icon: MdOutlineLocalSee },
         ]

@@ -74,7 +74,7 @@ function Login() {
   );
 }
 
-const Main = tw.div`w-full h-screen bg-[url('src/assets/login-bg.jpg')] bg-cover bg-center`;
+const Main = tw.div`w-full h-screen bg-login-bg bg-cover bg-center`;
 const LoginBar = tw.div`h-screen bg-[#fff] shadow-lg bg-opacity-40 bg-clip-padding w-[456px] p-12 ml-auto border-[1px] border-white flex flex-col`;
 
 const Label = tw.label`mx-4 text-[16px] text-black mb-2`;

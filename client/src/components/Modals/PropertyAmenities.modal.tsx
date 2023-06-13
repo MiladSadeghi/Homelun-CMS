@@ -88,11 +88,9 @@ function PropertyAmenities({ toggle, inputs }: any) {
   );
 }
 
-const AmenitiesModal = styled.div`
+const AmenitiesModal = styled.div<{ show: boolean }>`
   ${tw`bg-slate-600 p-8 bg-opacity-60 absolute left-0 top-0 w-full h-full`} ${({
     show,
-  }: {
-    show: boolean;
   }) => (show ? tw`block` : tw`hidden`)}
 `;
 const AmenitiesHeader = tw.div`py-3 px-7 border-b flex justify-between items-center`;

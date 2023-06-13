@@ -1,7 +1,7 @@
 let whitelist = [
   "http://localhost:5173",
   "http://192.168.1.5",
-  "https://homelun-admin.miladsdgh.ir",
+  "https://homelun-cms.miladsdgh.ir",
   "https://homelun.miladsdgh.ir",
   "http://localhost",
   "http://127.0.0.1",

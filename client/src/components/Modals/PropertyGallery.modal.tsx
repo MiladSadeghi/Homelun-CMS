@@ -129,26 +129,22 @@ function PropertyGallery({ toggle, tab, inputs }: any) {
 }
 
 const Button = tw.button`rounded-md !bg-teal-600 text-white text-sm flex items-center font-semibold py-2 px-2`;
-const GalleryModal = styled.div`
+const GalleryModal = styled.div<{ show: boolean }>`
   ${tw`bg-slate-600 p-8 bg-opacity-60 absolute left-0 top-0 w-full h-full`} ${({
     show,
-  }: {
-    show: boolean;
   }) => (show ? tw`block` : tw`hidden`)}
 `;
 const GalleryHeader = tw.div`py-3 px-7 border-b flex justify-between items-center`;
 const GalleryTabs = tw.div`flex w-full`;
-const GalleryTab = styled.h3`
+const GalleryTab = styled.h3<{ active: boolean }>`
   ${tw`font-bold w-full text-center py-3 text-gray-400 cursor-pointer`} ${({
     active,
-  }: {
-    active: boolean;
   }) => active && tw`border-b bg-purple-900 text-white`}
 `;
 const GalleryBody = tw.div`p-7 overflow-y-auto h-[87%]`;
-const GalleryInput = styled.input`
+const GalleryInput = styled.input<{ error: boolean }>`
   ${tw`col-span-4 py-2 px-2 rounded-md border border-gray-300 border-solid`}
-  ${({ error = false }: { error?: boolean }) =>
+  ${({ error = false }) =>
     error ? tw`!border-red-500` : tw`!border-green-700`}
 `;
 

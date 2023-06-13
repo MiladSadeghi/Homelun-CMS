@@ -16,7 +16,6 @@ import { isProfileCompleted, userLoggedIn } from "../feature/user/userSlice";
 import Dashboard from "../pages/Dashboard";
 import { TRole } from "../types/role";
 import Agents from "../pages/Agents";
-import Insight from "../pages/Insight";
 import Properties from "../pages/Properties";
 import Users from "../pages/Users";
 import Profile from "../pages/Profile";
@@ -34,10 +33,6 @@ function Routes() {
   );
   const userRole: TRole | null = useSelector(
     (state: RootState) => state.userSlice.role
-  );
-
-  const isAgentProfileComplete: boolean | any = useSelector(
-    (state: RootState) => state.userSlice.profileCompleted
   );
 
   const dispatch = useDispatch();
@@ -104,7 +99,6 @@ function Routes() {
           element={isUserAuthenticated ? <PrivateRoute /> : <Login />}
         >
           {/* Public Routes */}
-          <Route path="/insight" element={<Insight />} />
           <Route path="/" element={<Dashboard />} />
           <Route path="/properties" element={<Properties />} />
           <Route path="/properties/:propertyId" element={<Property />} />

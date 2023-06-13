@@ -117,7 +117,7 @@ function Dashboard() {
         <h5 className="font-bold text-xl mb-4">Top Agents</h5>
         <div className="overflow-y-auto h-[90%]">
           {dashboardData?.topAgent.map((agent: any) => (
-            <div className="flex mb-2 items-center">
+            <div className="flex mb-2 items-center" key={agent._id}>
               <img className="h-16 rounded-full " src={agent.agent.cover} />
               <h4 className="ml-4 font-semibold text-base ">
                 {agent.agent.name}

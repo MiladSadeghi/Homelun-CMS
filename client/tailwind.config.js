@@ -6,6 +6,9 @@ export default {
       fontFamily: {
         Mulish: ["Mulish", "sans-serif"],
       },
+      backgroundImage: {
+        "login-bg": "url('https://s8.uupload.ir/files/login-bg_chf.jpg')",
+      },
     },
   },
   plugins: [],

@@ -1,6 +1,5 @@
 import React from "react";
-import styled from "styled-components";
-import tw from "twin.macro";
+import tw, { styled } from "twin.macro";
 
 function Logo({ color }: { color: "light" | "dark" }) {
   return (
@@ -10,7 +9,7 @@ function Logo({ color }: { color: "light" | "dark" }) {
   );
 }
 
-const H5 = styled.h5`
+const H5 = styled.h5<{ color: string }>`
   ${tw`text-2xl font-bold text-white leading-8`} ${({
     color,
   }: {

@@ -4,7 +4,7 @@ import TourRequestModel from "../models/TourRequestModel.js";
 import AgentModel from "../models/AgentModel.js";
 
 export const getInitialData = async (req, res) => {
-  const { role } = req;
+  const { role, _id } = req;
   try {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 7);
@@ -15,10 +15,13 @@ export const getInitialData = async (req, res) => {
       dates.push(date.toISOString().split("T")[0]);
     }
 
+    const agent = role === "agent" && (await AgentModel.findOne({ user: _id }));
+
     const getViews = await PropertyViewModel.aggregate([
       {
         $match: {
           createdAt: { $gte: startDate },
+          ...(role === "agent" && { agent: agent._id }),
         },
       },
       {
@@ -66,11 +69,20 @@ export const getInitialData = async (req, res) => {
       dayNames.map((day) => ({ _id: day, count: 0 }))
     );
 
-    const getLatestProducts = await PropertyModel.find({})
+    const getLatestProducts = await PropertyModel.find({
+      ...(role === "agent" && { agent: agent._id }),
+    })
       .limit(10)
       .sort({ createdAt: -1 })
       .populate("agent");
     const mostPropertyTourRequest = await TourRequestModel.aggregate([
+      {
+        ...(role === "agent" && {
+          $match: {
+            agent: agent._id,
+          },
+        }),
+      },
       {
         $group: {
           _id: "$property",
@@ -133,6 +145,13 @@ export const getInitialData = async (req, res) => {
     ]);
     const topProperties = await PropertyViewModel.aggregate([
       {
+        ...(role === "agent" && {
+          $match: {
+            agent: agent._id,
+          },
+        }),
+      },
+      {
         $group: {
           _id: "$property",
           totalCount: { $sum: "$count" },
@@ -153,13 +172,12 @@ export const getInitialData = async (req, res) => {
         $unwind: "$property",
       },
     ]);
-    console.log(topProperties);
     return res.status(200).json({
       error: false,
       viewsCountPerDay: viewsByDay,
       latestProperty: getLatestProducts,
       mostTourRequest: mostPropertyTourRequest,
-      topAgent,
+      ...(role !== "agent" && { topAgent }),
       topProperties,
     });
   } catch (error) {

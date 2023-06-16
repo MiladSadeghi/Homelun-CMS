@@ -27,6 +27,7 @@
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Deploying](#deployment)
+- [Users](#users)
 - [Built Using](#built_using)
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
@@ -55,6 +56,39 @@ then run both separately with
 npm run dev
 or
 yarn dev
+```
+
+## 👥 Users <a name="users"></a>
+
+You can log in to the agent's account to test the CMS.
+
+```
+email: tstephenson@platinumpropertiesnyc.com
+password: password: #@YYH2?-<k?(-s2:
+
+email: faverealty@gmail.com
+password: Q,}R{yZ5x}]v{g92
+
+email: rconsalo@pp-nyc.com
+password: AARa]P~W-{-M5C^k
+
+email: miguel.cabrera@elliman.com
+password: ry^QBJY}]2q7~S!g
+
+email: caustad@elliman.com
+password: :/Hz<'yW*d#/!m5n
+
+email: lenakoropey@danielgale.com
+password: CtbB9g>Rs=`D/dk+
+
+email: wendy.lee@elliman.com
+password: /y;3NZw!dy+(~]N}
+
+email: sicarealtygroup@gmail.com
+password: >kAW;Q3xBxZx2B]V
+
+email: christopher.pizzola@sothebysrealty.com
+password: JvK>Pp=YG-jEGh6E
 ```
 
 ## 🚀 Deploying <a name = "deployment"></a>
